@@ -5,31 +5,43 @@ export default {
   theme: {
     extend: {
       colors: {
+        // ---- True-black backgrounds -----------------------------------------
         void: {
-          DEFAULT: '#080B14',
-          50: '#0D1121',
-          100: '#111729',
-          200: '#1A2035',
+          DEFAULT: '#000000',
+          50: '#05080c',
+          100: '#090e15',
+          200: '#0e1720',
         },
+        // ---- Icy steel-blue (replaces warm purple) ---------------------------
         nebula: {
-          DEFAULT: '#7C3AED',
-          light: '#A78BFA',
-          dark: '#5B21B6',
-          50: '#F5F3FF',
+          DEFAULT: '#4a80a0',
+          light: '#8ab8d4',
+          dark: '#1e4a68',
+          50: '#d4eaf6',
         },
+        // ---- Cool arctic teal (replaces warm cyan) ---------------------------
         aurora: {
-          DEFAULT: '#06B6D4',
-          light: '#67E8F9',
-          dark: '#0E7490',
+          DEFAULT: '#2a90b0',
+          light: '#5ab4cc',
+          dark: '#0a5c78',
         },
+        // ---- Moonlight silvers -----------------------------------------------
+        moon: {
+          DEFAULT: '#c4d8ec',
+          bright: '#dceefa',
+          glow: '#eaf4ff',
+          dim: '#7898b4',
+        },
+        // ---- Cool-white text ------------------------------------------------
         star: {
-          DEFAULT: '#F8FAFC',
-          muted: '#94A3B8',
-          dim: '#475569',
+          DEFAULT: '#eef4fa',
+          muted: '#687888',
+          dim: '#2e3e50',
         },
-        success: '#10B981',
-        warning: '#F59E0B',
-        danger: '#EF4444',
+        // ---- Status ---------------------------------------------------------
+        success: '#22aa7a',
+        warning: '#b89030',
+        danger: '#c04860',
       },
       fontFamily: {
         display: ['Inter', 'system-ui', 'sans-serif'],
@@ -43,7 +55,7 @@ export default {
       keyframes: {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-6px)' },
+          '50%': { transform: 'translateY(-5px)' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
@@ -53,7 +65,7 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'glass-glow':
-          'linear-gradient(135deg, rgba(124,58,237,0.15) 0%, rgba(6,182,212,0.1) 100%)',
+          'linear-gradient(135deg, rgba(74,128,160,0.12) 0%, rgba(42,144,176,0.08) 100%)',
       },
     },
   },

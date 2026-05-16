@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Account, NetworkConfig, PopupState } from '@celestial/shared-types';
-import { AppView, MessageType } from '@celestial/shared-types';
+import { MessageType } from '@celestial/shared-types';
 import { NETWORK_BY_CHAIN_ID } from '../../shared/constants';
 import { isSuccess, sendToBackground } from '../../shared/messaging';
+import Logo from '../components/Logo';
+import PortfolioView from '../components/PortfolioView';
+import AssetList from '../components/AssetList';
 
 interface Props {
   popupState: PopupState;
@@ -31,19 +34,14 @@ export default function Dashboard({ popupState, accounts, networks, onLock }: Pr
     onLock();
   }
 
-  function truncateAddress(addr: string) {
-    if (addr.length <= 12) return addr;
-    return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
-  }
-
   return (
-    <div className="w-[800px] min-h-[600px] flex flex-col">
+    <div className="w-[600px] min-h-[800px] flex flex-col">
       {/* ---- Top bar ------------------------------------------------------- */}
       <header className="flex items-center justify-between px-5 py-3 border-b border-nebula/10">
         {/* Network pill */}
         <div
           className="flex items-center gap-2 px-3 py-1.5 rounded-full cursor-pointer hover:border-nebula/40 transition-colors"
-          style={{ background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.18)' }}
+          style={{ background: 'rgba(74,128,160,0.08)', border: '1px solid rgba(74,128,160,0.18)' }}
         >
           <span className="w-2 h-2 rounded-full bg-success flex-shrink-0" />
           <span className="text-xs font-medium text-star-muted">
@@ -51,8 +49,11 @@ export default function Dashboard({ popupState, accounts, networks, onLock }: Pr
           </span>
         </div>
 
-        {/* Logo */}
-        <span className="text-sm font-bold gradient-text tracking-wide">CELESTIAL</span>
+        {/* Logo + wordmark */}
+        <div className="flex items-center gap-2">
+          <Logo size={20} />
+          <span className="text-sm font-bold gradient-text tracking-wide">CELESTIAL</span>
+        </div>
 
         {/* Lock button */}
         <button
@@ -61,61 +62,13 @@ export default function Dashboard({ popupState, accounts, networks, onLock }: Pr
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-star-muted
                      hover:text-star hover:bg-void-200 transition-all"
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path
-              d="M9 5V4a3 3 0 1 0-6 0v1H2v6h8V5H9ZM5 4a1 1 0 1 1 2 0v1H5V4Z"
-              fill="currentColor"
-            />
-          </svg>
+          <LockIcon />
           {locking ? '…' : 'Lock'}
         </button>
       </header>
 
-      {/* ---- Account section ----------------------------------------------- */}
-      <div className="px-6 py-5 flex flex-col items-center gap-3">
-        {/* Account address badge */}
-        <div className="flex items-center gap-2">
-          <div
-            className="w-8 h-8 rounded-full flex-shrink-0"
-            style={{
-              background: `linear-gradient(135deg, hsl(${
-                (activeAccount?.address.charCodeAt(2) ?? 0) * 7
-              }deg, 70%, 50%) 0%, hsl(${
-                (activeAccount?.address.charCodeAt(4) ?? 0) * 7
-              }deg, 70%, 40%) 100%)`,
-            }}
-          />
-          <div>
-            <p className="text-star text-sm font-semibold">
-              {activeAccount?.name ?? 'Account 1'}
-            </p>
-            <p className="text-star-dim text-xs font-mono">
-              {truncateAddress(activeAccount?.address ?? '')}
-            </p>
-          </div>
-        </div>
-
-        {/* Portfolio value — placeholder */}
-        <div className="text-center">
-          <p className="text-4xl font-bold text-star tracking-tight">$0.00</p>
-          <p className="text-star-dim text-xs mt-0.5">Portfolio value</p>
-        </div>
-
-        {/* Quick actions */}
-        <div className="flex gap-3 mt-1">
-          {(['Send', 'Receive', 'Swap', 'Buy'] as const).map(action => (
-            <button
-              key={action}
-              className="flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium
-                         text-star-muted hover:text-star transition-colors"
-              style={{ background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.14)' }}
-            >
-              <ActionIcon action={action} />
-              {action}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* ---- Portfolio section --------------------------------------------- */}
+      <PortfolioView account={activeAccount} totalUsd={0} change24h={0} />
 
       {/* ---- Tab bar ------------------------------------------------------- */}
       <div className="flex border-b border-nebula/10 px-5">
@@ -139,8 +92,8 @@ export default function Dashboard({ popupState, accounts, networks, onLock }: Pr
       </div>
 
       {/* ---- Tab content --------------------------------------------------- */}
-      <div className="flex-1 overflow-y-auto px-5 py-4">
-        {tab === 'tokens' && <TokensTab />}
+      <div className="flex-1 overflow-y-auto px-2 py-2">
+        {tab === 'tokens' && <AssetList />}
         {tab === 'activity' && <ActivityTab />}
         {tab === 'defi' && <DefiTab />}
       </div>
@@ -148,24 +101,20 @@ export default function Dashboard({ popupState, accounts, networks, onLock }: Pr
   );
 }
 
-// ---- Tab stubs ----------------------------------------------------------
-
-function TokensTab() {
-  return (
-    <div className="flex flex-col items-center justify-center h-48 gap-3 text-center">
-      <div className="text-3xl opacity-20">◎</div>
-      <p className="text-star-muted text-sm font-medium">No tokens yet</p>
-      <p className="text-star-dim text-xs max-w-48 leading-relaxed">
-        Receive tokens or connect to a dApp to get started.
-      </p>
-    </div>
-  );
-}
+// ---- Stub tabs ----------------------------------------------------------
 
 function ActivityTab() {
   return (
-    <div className="flex flex-col items-center justify-center h-48 gap-3 text-center">
-      <div className="text-3xl opacity-20">⟳</div>
+    <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center"
+        style={{ background: 'rgba(74,128,160,0.08)', border: '1px solid rgba(74,128,160,0.14)' }}
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-nebula">
+          <path d="M10 3v7l4 2" />
+          <circle cx="10" cy="10" r="7" />
+        </svg>
+      </div>
       <p className="text-star-muted text-sm font-medium">No activity</p>
       <p className="text-star-dim text-xs max-w-48 leading-relaxed">
         Your transaction history will appear here.
@@ -176,8 +125,15 @@ function ActivityTab() {
 
 function DefiTab() {
   return (
-    <div className="flex flex-col items-center justify-center h-48 gap-3 text-center">
-      <div className="text-3xl opacity-20">⬡</div>
+    <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center"
+        style={{ background: 'rgba(74,128,160,0.08)', border: '1px solid rgba(74,128,160,0.14)' }}
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-nebula">
+          <path d="M3 10h14M10 3l4 7-4 7-4-7 4-7Z" />
+        </svg>
+      </div>
       <p className="text-star-muted text-sm font-medium">DeFi coming soon</p>
       <p className="text-star-dim text-xs max-w-48 leading-relaxed">
         Staking, lending, and LP positions will be tracked here.
@@ -186,18 +142,10 @@ function DefiTab() {
   );
 }
 
-// ---- Tiny icon component ------------------------------------------------
-
-function ActionIcon({ action }: { action: string }) {
-  const paths: Record<string, string> = {
-    Send: 'M10 2L2 10M10 2H5M10 2V7',
-    Receive: 'M2 10L10 2M2 10H7M2 10V5',
-    Swap: 'M2 4h8M8 2l2 2-2 2M10 8H2M4 6l-2 2 2 2',
-    Buy: 'M2 2h8l-1 6H3L2 2ZM5 10h2',
-  };
+function LockIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d={paths[action] ?? ''} />
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M9 5V4a3 3 0 1 0-6 0v1H2v6h8V5H9ZM5 4a1 1 0 1 1 2 0v1H5V4Z" fill="currentColor" />
     </svg>
   );
 }

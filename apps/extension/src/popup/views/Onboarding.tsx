@@ -4,6 +4,7 @@ import type { VaultCreateResponse } from '@celestial/shared-types';
 import { MessageType } from '@celestial/shared-types';
 import { generateMnemonic, validateMnemonic } from '@celestial/core-crypto';
 import { isSuccess, sendToBackground } from '../../shared/messaging';
+import Logo from '../components/Logo';
 
 type Step = 'landing' | 'create-phrase' | 'create-password' | 'import';
 
@@ -28,28 +29,16 @@ export default function Onboarding({ onCreated, onImported }: Props) {
   const [loading, setLoading] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
-  // ---- Step: landing -------------------------------------------------------
-
   function handleStartCreate() {
     const phrase = generateMnemonic(128);
     setMnemonic(phrase);
     setStep('create-phrase');
   }
 
-  // ---- Step: create-phrase -------------------------------------------------
-
-  // ---- Step: create-password -----------------------------------------------
-
   async function handleCreateWallet() {
     setError('');
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
+    if (password.length < 8) { setError('Password must be at least 8 characters.'); return; }
+    if (password !== confirmPassword) { setError('Passwords do not match.'); return; }
     setLoading(true);
     try {
       const res = await sendToBackground<VaultCreateResponse>(MessageType.VAULT_CREATE, {
@@ -57,17 +46,11 @@ export default function Onboarding({ onCreated, onImported }: Props) {
         password,
         walletName: 'My Wallet',
       });
-      if (isSuccess(res)) {
-        onCreated(res.data);
-      } else {
-        setError(res.error.message);
-      }
+      if (isSuccess(res)) { onCreated(res.data); } else { setError(res.error.message); }
     } finally {
       setLoading(false);
     }
   }
-
-  // ---- Step: import --------------------------------------------------------
 
   async function handleImportWallet() {
     setError('');
@@ -76,14 +59,8 @@ export default function Onboarding({ onCreated, onImported }: Props) {
       setError('Invalid recovery phrase. Please check the words and try again.');
       return;
     }
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
+    if (password.length < 8) { setError('Password must be at least 8 characters.'); return; }
+    if (password !== confirmPassword) { setError('Passwords do not match.'); return; }
     setLoading(true);
     try {
       const res = await sendToBackground<VaultCreateResponse>(MessageType.VAULT_IMPORT, {
@@ -91,74 +68,47 @@ export default function Onboarding({ onCreated, onImported }: Props) {
         password,
         walletName: 'Imported Wallet',
       });
-      if (isSuccess(res)) {
-        onImported(res.data);
-      } else {
-        setError(res.error.message);
-      }
+      if (isSuccess(res)) { onImported(res.data); } else { setError(res.error.message); }
     } finally {
       setLoading(false);
     }
   }
 
-  // ---- Render --------------------------------------------------------------
-
   const words = mnemonic.split(' ');
 
   return (
-    <div className="w-[800px] min-h-[600px] flex">
-      {/* Left panel — branding */}
-      <div className="w-64 flex-shrink-0 flex flex-col items-center justify-center gap-6 px-8 border-r border-nebula/10">
-        <div className="flex flex-col items-center gap-3">
-          <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
-            style={{
-              background: 'linear-gradient(135deg, rgba(124,58,237,0.3) 0%, rgba(6,182,212,0.2) 100%)',
-              border: '1px solid rgba(124,58,237,0.35)',
-            }}
-          >
-            ✦
-          </div>
-          <h1 className="text-xl font-bold gradient-text">Celestial</h1>
-          <p className="text-star-dim text-xs text-center leading-relaxed">
-            Multi-chain wallet for the decentralised web
-          </p>
-        </div>
+    <div className="w-[600px] min-h-[800px] flex flex-col">
+      {/* Header */}
+      <header className="flex items-center justify-center gap-3 px-6 py-5 border-b border-nebula/10">
+        <Logo size={28} />
+        <span className="text-base font-bold gradient-text tracking-widest uppercase">Celestial</span>
+      </header>
 
-        <div className="w-full space-y-2">
-          {['Ethereum', 'Solana', 'Bitcoin', 'EVM L2s'].map(chain => (
-            <div
-              key={chain}
-              className="flex items-center gap-2 text-xs text-star-muted px-3 py-1.5 rounded-lg"
-              style={{ background: 'rgba(124,58,237,0.06)' }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-nebula-light flex-shrink-0" />
-              {chain}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Right panel — step content */}
-      <div className="flex-1 flex items-center justify-center p-8">
+      {/* Step content */}
+      <div className="flex-1 flex items-center justify-center px-8 py-10">
         <AnimatePresence mode="wait">
           {step === 'landing' && (
-            <motion.div key="landing" {...SLIDE} className="w-full max-w-xs flex flex-col gap-4">
-              <div>
-                <h2 className="text-2xl font-bold text-star mb-1">Get started</h2>
-                <p className="text-star-muted text-sm">Create a new wallet or restore an existing one.</p>
+            <motion.div key="landing" {...SLIDE} className="w-full max-w-xs flex flex-col gap-6">
+              <div className="text-center flex flex-col items-center gap-3">
+                <Logo size={48} />
+                <h2 className="text-2xl font-bold text-star">Welcome</h2>
+                <p className="text-star-muted text-sm leading-relaxed">
+                  Create a new wallet or restore an existing one with your recovery phrase.
+                </p>
               </div>
-              <button onClick={handleStartCreate} className="btn-primary w-full">
-                Create new wallet
-              </button>
-              <button onClick={() => setStep('import')} className="btn-secondary w-full">
-                Import recovery phrase
-              </button>
+              <div className="flex flex-col gap-3">
+                <button onClick={handleStartCreate} className="btn-primary w-full">
+                  Create new wallet
+                </button>
+                <button onClick={() => setStep('import')} className="btn-secondary w-full">
+                  Import recovery phrase
+                </button>
+              </div>
             </motion.div>
           )}
 
           {step === 'create-phrase' && (
-            <motion.div key="create-phrase" {...SLIDE} className="w-full max-w-sm flex flex-col gap-5">
+            <motion.div key="create-phrase" {...SLIDE} className="w-full flex flex-col gap-5">
               <div>
                 <h2 className="text-xl font-bold text-star mb-1">Your recovery phrase</h2>
                 <p className="text-star-muted text-xs leading-relaxed">
@@ -173,10 +123,10 @@ export default function Onboarding({ onCreated, onImported }: Props) {
                   {words.map((word, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-xs"
-                      style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.15)' }}
+                      className="flex items-center gap-1.5 px-2 py-2 rounded-lg text-xs"
+                      style={{ background: 'rgba(74,128,160,0.10)', border: '1px solid rgba(74,128,160,0.16)' }}
                     >
-                      <span className="text-nebula-light font-mono w-4 flex-shrink-0">{i + 1}.</span>
+                      <span className="text-nebula-light font-mono w-4 flex-shrink-0 text-[10px]">{i + 1}.</span>
                       <span className="text-star font-medium">{word}</span>
                     </div>
                   ))}
@@ -194,9 +144,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
               </div>
 
               <div className="flex gap-3">
-                <button onClick={() => setStep('landing')} className="btn-ghost flex-1">
-                  Back
-                </button>
+                <button onClick={() => setStep('landing')} className="btn-ghost flex-1">Back</button>
                 <button
                   onClick={() => { setStep('create-password'); setError(''); }}
                   disabled={!revealed}
@@ -212,8 +160,8 @@ export default function Onboarding({ onCreated, onImported }: Props) {
             <motion.div key="create-password" {...SLIDE} className="w-full max-w-xs flex flex-col gap-4">
               <div>
                 <h2 className="text-xl font-bold text-star mb-1">Set a password</h2>
-                <p className="text-star-muted text-xs">
-                  This encrypts your wallet locally. You'll need it to unlock Celestial.
+                <p className="text-star-muted text-xs leading-relaxed">
+                  This encrypts your wallet locally. You'll need it every time you open Celestial.
                 </p>
               </div>
 
@@ -237,9 +185,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
               {error && <p className="text-danger text-xs">{error}</p>}
 
               <div className="flex gap-3">
-                <button onClick={() => setStep('create-phrase')} className="btn-ghost flex-1">
-                  Back
-                </button>
+                <button onClick={() => setStep('create-phrase')} className="btn-ghost flex-1">Back</button>
                 <button onClick={() => void handleCreateWallet()} disabled={loading} className="btn-primary flex-1">
                   {loading ? 'Creating…' : 'Create wallet'}
                 </button>
@@ -258,7 +204,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
                 placeholder="Enter recovery phrase words separated by spaces…"
                 value={importPhrase}
                 onChange={e => setImportPhrase(e.target.value)}
-                rows={3}
+                rows={4}
                 className="glass-input w-full px-4 py-3 text-sm text-star placeholder-star-dim resize-none"
                 spellCheck={false}
                 autoComplete="off"
@@ -282,9 +228,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
               {error && <p className="text-danger text-xs">{error}</p>}
 
               <div className="flex gap-3">
-                <button onClick={() => { setStep('landing'); setError(''); }} className="btn-ghost flex-1">
-                  Back
-                </button>
+                <button onClick={() => { setStep('landing'); setError(''); }} className="btn-ghost flex-1">Back</button>
                 <button onClick={() => void handleImportWallet()} disabled={loading} className="btn-primary flex-1">
                   {loading ? 'Importing…' : 'Import wallet'}
                 </button>

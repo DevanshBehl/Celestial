@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import type { VaultUnlockResponse } from '@celestial/shared-types';
 import { MessageType } from '@celestial/shared-types';
 import { isSuccess, sendToBackground } from '../../shared/messaging';
+import Logo from '../components/Logo';
 
 interface Props {
   onUnlocked: (res: VaultUnlockResponse) => void;
@@ -36,7 +37,7 @@ export default function Unlock({ onUnlocked }: Props) {
   }
 
   return (
-    <div className="w-[800px] min-h-[600px] flex items-center justify-center">
+    <div className="w-[600px] min-h-[800px] flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1, transition: { duration: 0.25, ease: 'easeOut' } }}
@@ -44,18 +45,18 @@ export default function Unlock({ onUnlocked }: Props) {
       >
         {/* Logo */}
         <div
-          className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl animate-float"
+          className="w-16 h-16 rounded-2xl flex items-center justify-center animate-float"
           style={{
-            background: 'linear-gradient(135deg, rgba(124,58,237,0.3) 0%, rgba(6,182,212,0.2) 100%)',
-            border: '1px solid rgba(124,58,237,0.35)',
-            boxShadow: '0 0 32px rgba(124,58,237,0.25)',
+            background: 'linear-gradient(135deg, rgba(74,128,160,0.22) 0%, rgba(42,144,176,0.14) 100%)',
+            border: '1px solid rgba(74,128,160,0.28)',
+            boxShadow: '0 0 32px rgba(74,128,160,0.18)',
           }}
         >
-          ✦
+          <Logo size={36} />
         </div>
 
         <div className="text-center">
-          <h1 className="text-xl font-bold gradient-text mb-1">Celestial Wallet</h1>
+          <h1 className="text-xl font-bold gradient-text mb-1">Celestial</h1>
           <p className="text-star-muted text-xs">Enter your password to unlock</p>
         </div>
 
