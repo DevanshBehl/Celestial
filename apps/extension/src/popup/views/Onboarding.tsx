@@ -81,7 +81,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
       {/* Header */}
       <header className="flex items-center justify-center gap-2 px-4 py-3 border-b border-nebula/10">
         <Logo size={20} />
-        <span className="celestial-title text-sm">CELESTIAL</span>
+        <span className="celestial-title text-xl">CELESTIAL</span>
       </header>
 
       {/* Step content */}

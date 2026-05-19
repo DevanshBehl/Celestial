@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import type { VaultUnlockResponse } from '@celestial/shared-types';
 import { MessageType } from '@celestial/shared-types';
 import { isSuccess, sendToBackground } from '../../shared/messaging';
-import { AnimatedMoon } from '../components/Logo';
+import Logo, { AnimatedMoon } from '../components/Logo';
 
 interface Props {
   onUnlocked: (res: VaultUnlockResponse) => void;
@@ -40,7 +40,10 @@ export default function Unlock({ onUnlocked }: Props) {
     <div className="w-[360px] min-h-[600px] flex flex-col">
       {/* ---- Header bar ---- */}
       <header className="flex items-center justify-center py-4 border-b border-nebula/10">
-        <span className="celestial-title text-base">CELESTIAL</span>
+        <div className="flex items-center gap-2">
+          <Logo size={26} />
+          <span className="celestial-title text-2xl">CELESTIAL</span>
+        </div>
         <button
           className="absolute right-5 w-7 h-7 rounded-full flex items-center justify-center
                      border border-nebula/20 text-star-muted hover:text-star hover:border-nebula/40 transition-colors"
