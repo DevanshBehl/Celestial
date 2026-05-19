@@ -40,7 +40,7 @@ export default function Unlock({ onUnlocked }: Props) {
     <div className="w-[360px] min-h-[600px] flex flex-col">
       {/* ---- Header bar ---- */}
       <header className="flex items-center justify-center py-4 border-b border-nebula/10">
-        <span className="text-base font-bold gradient-text tracking-widest uppercase">celestial</span>
+        <span className="celestial-title text-base">CELESTIAL</span>
         <button
           className="absolute right-5 w-7 h-7 rounded-full flex items-center justify-center
                      border border-nebula/20 text-star-muted hover:text-star hover:border-nebula/40 transition-colors"
@@ -61,7 +61,7 @@ export default function Unlock({ onUnlocked }: Props) {
           className="flex flex-col items-center gap-6 w-full"
         >
           {/* Animated crescent moon */}
-          <AnimatedMoon size={90} />
+          <AnimatedMoon size={100} />
 
           {/* Title */}
           <h1 className="text-2xl font-bold text-star text-center">
@@ -103,7 +103,7 @@ export default function Unlock({ onUnlocked }: Props) {
           </div>
 
           {/* Forgot password link */}
-          <p className="text-nebula text-sm font-semibold cursor-pointer hover:text-nebula-light transition-colors">
+          <p className="text-nebula font-semibold text-sm cursor-pointer hover:text-nebula-light transition-colors">
             Forgot password
           </p>
         </motion.div>

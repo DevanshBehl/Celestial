@@ -162,13 +162,13 @@ export default function App() {
 
   return (
     <div className="w-[360px] min-h-[600px] bg-void relative overflow-hidden">
-      {/* Background ambient glow */}
+      {/* Background ambient glow — pure purple */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 60% 40% at 50% -5%, rgba(171,159,242,0.12) 0%, transparent 70%), ' +
-            'radial-gradient(ellipse 40% 25% at 85% 95%, rgba(139,127,212,0.06) 0%, transparent 60%)',
+            'radial-gradient(ellipse 60% 40% at 50% -5%, rgba(171,159,242,0.10) 0%, transparent 70%), ' +
+            'radial-gradient(ellipse 35% 25% at 15% 90%, rgba(139,127,212,0.05) 0%, transparent 60%)',
         }}
       />
 

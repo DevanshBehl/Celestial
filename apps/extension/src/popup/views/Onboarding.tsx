@@ -77,11 +77,11 @@ export default function Onboarding({ onCreated, onImported }: Props) {
   const words = mnemonic.split(' ');
 
   return (
-    <div className="w-[600px] min-h-[800px] flex flex-col">
+    <div className="w-[360px] min-h-[600px] flex flex-col">
       {/* Header */}
       <header className="flex items-center justify-center gap-2 px-4 py-3 border-b border-nebula/10">
         <Logo size={20} />
-        <span className="text-sm font-bold gradient-text tracking-widest uppercase">celestial</span>
+        <span className="celestial-title text-sm">CELESTIAL</span>
       </header>
 
       {/* Step content */}
