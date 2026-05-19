@@ -7,14 +7,14 @@
 html,
 body,
 #root {
-  width: 600px;
-  min-height: 800px;
+  width: 360px;
+  min-height: 600px;
   overflow-x: hidden;
 }
 
 body {
   background-color: #000000;
-  color: #eef4fa;
+  color: #f0f0f5;
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -24,54 +24,84 @@ body {
 
 @layer components {
   .glass {
-    background: rgba(5, 8, 12, 0.72);
+    background: rgba(10, 10, 18, 0.72);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(74, 128, 160, 0.16);
+    border: 1px solid rgba(171, 159, 242, 0.12);
     border-radius: 16px;
   }
 
   .glass-strong {
-    background: rgba(5, 8, 12, 0.90);
+    background: rgba(10, 10, 18, 0.90);
     backdrop-filter: blur(32px);
     -webkit-backdrop-filter: blur(32px);
-    border: 1px solid rgba(74, 128, 160, 0.28);
+    border: 1px solid rgba(171, 159, 242, 0.20);
     border-radius: 16px;
   }
 
   .glass-input {
-    background: rgba(9, 14, 21, 0.75);
-    border: 1px solid rgba(74, 128, 160, 0.22);
+    background: rgba(14, 14, 24, 0.75);
+    border: 1px solid rgba(171, 159, 242, 0.18);
     border-radius: 10px;
     transition: border-color 150ms ease;
   }
 
   .glass-input:focus {
     outline: none;
-    border-color: rgba(74, 128, 160, 0.60);
-    box-shadow: 0 0 0 3px rgba(74, 128, 160, 0.12);
+    border-color: rgba(171, 159, 242, 0.50);
+    box-shadow: 0 0 0 3px rgba(171, 159, 242, 0.10);
   }
 
   .btn-primary {
-    @apply rounded-xl px-5 py-3 font-semibold text-sm text-white transition-all duration-150
-      bg-nebula hover:bg-nebula-dark active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
-    box-shadow: 0 0 20px rgba(74, 128, 160, 0.35);
+    @apply rounded-xl px-5 py-3.5 font-semibold text-sm transition-all duration-150
+      active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    background: #ab9ff2;
+    color: #0a0a0f;
+    box-shadow: 0 0 24px rgba(171, 159, 242, 0.30);
+  }
+  .btn-primary:hover {
+    background: #c4bbf7;
   }
 
   .btn-secondary {
-    @apply rounded-xl px-5 py-3 font-semibold text-sm text-star-muted transition-all duration-150
-      bg-void-200 hover:bg-void-100 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
-    border: 1px solid rgba(74, 128, 160, 0.18);
+    @apply rounded-xl px-5 py-3.5 font-semibold text-sm text-star-muted transition-all duration-150
+      bg-void-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    border: 1px solid rgba(171, 159, 242, 0.14);
+  }
+  .btn-secondary:hover {
+    background: #1a1a24;
+    border-color: rgba(171, 159, 242, 0.28);
   }
 
   .btn-ghost {
-    @apply rounded-xl px-5 py-3 font-semibold text-sm text-nebula-light transition-all duration-150
-      hover:bg-nebula/10 active:scale-[0.98];
+    @apply rounded-xl px-5 py-3.5 font-semibold text-sm text-nebula-light transition-all duration-150
+      active:scale-[0.98];
+  }
+  .btn-ghost:hover {
+    background: rgba(171, 159, 242, 0.10);
   }
 
   .gradient-text {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #c8dcf0 0%, #6aaccc 100%);
+    background-image: linear-gradient(135deg, #c4bbf7 0%, #ab9ff2 100%);
+  }
+
+  .action-card {
+    @apply flex flex-col items-center justify-center gap-2 rounded-2xl text-xs font-medium
+      text-star-muted transition-all duration-200 cursor-pointer;
+    background: rgba(26, 26, 36, 0.80);
+    border: 1px solid rgba(171, 159, 242, 0.08);
+    padding: 16px 12px;
+  }
+  .action-card:hover {
+    background: rgba(34, 34, 48, 0.90);
+    border-color: rgba(171, 159, 242, 0.20);
+    color: #f0f0f5;
+  }
+
+  .action-icon {
+    @apply w-10 h-10 rounded-full flex items-center justify-center;
+    color: #ab9ff2;
   }
 }
 
@@ -84,9 +114,9 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(74, 128, 160, 0.35);
+  background: rgba(171, 159, 242, 0.25);
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(74, 128, 160, 0.55);
+  background: rgba(171, 159, 242, 0.45);
 }

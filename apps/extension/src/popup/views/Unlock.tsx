@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import type { VaultUnlockResponse } from '@celestial/shared-types';
 import { MessageType } from '@celestial/shared-types';
 import { isSuccess, sendToBackground } from '../../shared/messaging';
-import Logo from '../components/Logo';
+import { AnimatedMoon } from '../components/Logo';
 
 interface Props {
   onUnlocked: (res: VaultUnlockResponse) => void;
@@ -37,68 +37,77 @@ export default function Unlock({ onUnlocked }: Props) {
   }
 
   return (
-    <div className="w-[600px] min-h-[800px] flex items-center justify-center">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1, transition: { duration: 0.25, ease: 'easeOut' } }}
-        className="glass p-10 w-80 flex flex-col items-center gap-6"
-      >
-        {/* Logo */}
-        <div
-          className="w-16 h-16 rounded-2xl flex items-center justify-center animate-float"
-          style={{
-            background: 'linear-gradient(135deg, rgba(74,128,160,0.22) 0%, rgba(42,144,176,0.14) 100%)',
-            border: '1px solid rgba(74,128,160,0.28)',
-            boxShadow: '0 0 32px rgba(74,128,160,0.18)',
-          }}
+    <div className="w-[360px] min-h-[600px] flex flex-col">
+      {/* ---- Header bar ---- */}
+      <header className="flex items-center justify-center py-4 border-b border-nebula/10">
+        <span className="text-base font-bold gradient-text tracking-widest uppercase">celestial</span>
+        <button
+          className="absolute right-5 w-7 h-7 rounded-full flex items-center justify-center
+                     border border-nebula/20 text-star-muted hover:text-star hover:border-nebula/40 transition-colors"
+          title="Help"
         >
-          <Logo size={36} />
-        </div>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <circle cx="8" cy="8" r="6" />
+            <path d="M6.5 6a1.5 1.5 0 0 1 3 0c0 1-1.5 1.25-1.5 2.5M8 11h.01" />
+          </svg>
+        </button>
+      </header>
 
-        <div className="text-center">
-          <h1 className="text-xl font-bold gradient-text mb-1">Celestial</h1>
-          <p className="text-star-muted text-xs">Enter your password to unlock</p>
-        </div>
+      {/* ---- Content ---- */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1, transition: { duration: 0.4, ease: 'easeOut' } }}
+          className="flex flex-col items-center gap-6 w-full"
+        >
+          {/* Animated crescent moon */}
+          <AnimatedMoon size={90} />
 
-        <div className="w-full flex flex-col gap-3">
-          <input
-            ref={inputRef}
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={e => { setPassword(e.target.value); setError(''); }}
-            onKeyDown={e => { if (e.key === 'Enter') void handleUnlock(); }}
-            className="glass-input w-full px-4 py-3 text-sm text-star placeholder-star-dim"
-            autoFocus
-            autoComplete="current-password"
-            disabled={loading}
-          />
+          {/* Title */}
+          <h1 className="text-2xl font-bold text-star text-center">
+            Enter your password
+          </h1>
 
-          <AnimatedError message={error} />
+          {/* Password input */}
+          <div className="w-full flex flex-col gap-4">
+            <input
+              ref={inputRef}
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={e => { setPassword(e.target.value); setError(''); }}
+              onKeyDown={e => { if (e.key === 'Enter') void handleUnlock(); }}
+              className="glass-input w-full px-4 py-3.5 text-sm text-star placeholder-star-dim"
+              autoFocus
+              autoComplete="current-password"
+              disabled={loading}
+            />
 
-          <button
-            onClick={() => void handleUnlock()}
-            disabled={loading || !password}
-            className="btn-primary w-full"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                Unlocking…
-              </span>
-            ) : (
-              'Unlock'
-            )}
-          </button>
-        </div>
+            <AnimatedError message={error} />
 
-        <p className="text-star-dim text-xs text-center">
-          Forgot your password?{' '}
-          <span className="text-nebula-light cursor-pointer hover:underline">
-            Restore with recovery phrase
-          </span>
-        </p>
-      </motion.div>
+            {/* Unlock button */}
+            <button
+              onClick={() => void handleUnlock()}
+              disabled={loading || !password}
+              className="btn-primary w-full"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 rounded-full border-2 border-void/30 border-t-void animate-spin" />
+                  Unlocking…
+                </span>
+              ) : (
+                'Unlock'
+              )}
+            </button>
+          </div>
+
+          {/* Forgot password link */}
+          <p className="text-nebula text-sm font-semibold cursor-pointer hover:text-nebula-light transition-colors">
+            Forgot password
+          </p>
+        </motion.div>
+      </div>
     </div>
   );
 }

@@ -6,60 +6,39 @@ interface Props {
   change24h: number;
 }
 
-const ACTIONS = ['Send', 'Receive', 'Swap', 'Buy'] as const;
+const ACTIONS = ['Send', 'Swap', 'Receive', 'Buy'] as const;
 type Action = typeof ACTIONS[number];
 
 export default function PortfolioView({ account, totalUsd, change24h }: Props) {
-  const address = account?.address ?? '';
-  const name = account?.name ?? 'Account 1';
-  const truncated = address.length > 12 ? `${address.slice(0, 6)}…${address.slice(-4)}` : address;
-
   const changePositive = change24h >= 0;
   const changeColor = changePositive ? 'text-success' : 'text-danger';
   const changePrefix = changePositive ? '+' : '';
 
-  const seed1 = address.charCodeAt(2) ?? 0;
-  const seed2 = address.charCodeAt(4) ?? 0;
-
   return (
-    <div className="flex flex-col items-center gap-4 py-6">
-      {/* Account row */}
-      <div className="flex items-center gap-3">
-        <div
-          className="w-9 h-9 rounded-full flex-shrink-0"
-          style={{
-            background: `linear-gradient(135deg, hsl(${seed1 * 7}deg, 55%, 45%) 0%, hsl(${seed2 * 7}deg, 55%, 35%) 100%)`,
-          }}
-        />
-        <div>
-          <p className="text-star text-sm font-semibold leading-none">{name}</p>
-          <p className="text-star-muted text-xs font-mono mt-0.5">{truncated}</p>
-        </div>
-      </div>
-
+    <div className="flex flex-col items-center gap-4 py-5">
       {/* Portfolio value */}
       <div className="text-center">
-        <p className="text-4xl font-bold text-star tracking-tight">
+        <p className="text-3xl font-bold text-star tracking-tight leading-none">
           ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
         {change24h !== 0 && (
-          <p className={`text-xs mt-1 font-medium ${changeColor}`}>
+          <p className={`text-xs mt-2 font-medium ${changeColor}`}>
             {changePrefix}{change24h.toFixed(2)}% today
           </p>
         )}
       </div>
 
-      {/* Quick actions */}
-      <div className="flex gap-3">
+      {/* Quick actions — Phantom-style grid */}
+      <div className="grid grid-cols-4 gap-2 w-full px-4">
         {ACTIONS.map(action => (
           <button
             key={action}
-            className="flex flex-col items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-medium
-                       text-star-muted hover:text-star transition-colors"
-            style={{ background: 'rgba(74,128,160,0.08)', border: '1px solid rgba(74,128,160,0.14)' }}
+            className="action-card"
           >
-            <ActionIcon action={action} />
-            {action}
+            <div className="action-icon">
+              <ActionIcon action={action} />
+            </div>
+            <span className="text-[11px]">{action}</span>
           </button>
         ))}
       </div>
@@ -68,24 +47,43 @@ export default function PortfolioView({ account, totalUsd, change24h }: Props) {
 }
 
 function ActionIcon({ action }: { action: Action }) {
-  const paths: Record<Action, string> = {
-    Send: 'M10 2L2 10M10 2H5M10 2V7',
-    Receive: 'M2 10L10 2M2 10H7M2 10V5',
-    Swap: 'M2 4h8M8 2l2 2-2 2M10 8H2M4 6l-2 2 2 2',
-    Buy: 'M2 2h8l-1 6H3L2 2ZM5 10h2',
+  const iconProps = {
+    width: 20,
+    height: 20,
+    viewBox: '0 0 20 20',
+    fill: 'none' as const,
+    stroke: 'currentColor',
+    strokeWidth: 1.8,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
   };
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 12 12"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d={paths[action]} />
-    </svg>
-  );
+
+  switch (action) {
+    case 'Send':
+      return (
+        <svg {...iconProps}>
+          <path d="M4 10h12M12 6l4 4-4 4" />
+        </svg>
+      );
+    case 'Swap':
+      return (
+        <svg {...iconProps}>
+          <path d="M6 7h8M14 7l-2-2M14 7l-2 2M14 13H6M6 13l2-2M6 13l2 2" />
+        </svg>
+      );
+    case 'Receive':
+      return (
+        <svg {...iconProps}>
+          <rect x="4" y="4" width="12" height="12" rx="2" />
+          <rect x="7" y="7" width="6" height="6" rx="1" />
+        </svg>
+      );
+    case 'Buy':
+      return (
+        <svg {...iconProps}>
+          <path d="M10 4v12M6 10h8" />
+          <circle cx="10" cy="10" r="7" strokeWidth={1.5} />
+        </svg>
+      );
+  }
 }
