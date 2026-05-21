@@ -23,9 +23,9 @@ body {
 /* ---- Celestial title — clean modern display -------------------------------- */
 
 .celestial-title {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-family: 'Grand Hotel', cursive;
+  font-weight: 400;
+  letter-spacing: 0.05em;
   color: #f4f4f5; /* moon-light */
 }
 

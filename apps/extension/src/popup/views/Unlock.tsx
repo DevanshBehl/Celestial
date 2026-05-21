@@ -42,7 +42,7 @@ export default function Unlock({ onUnlocked }: Props) {
       <header className="flex items-center justify-center py-4 border-b border-zinc-800">
         <div className="flex items-center gap-2">
           <Logo size={26} />
-          <span className="celestial-title text-2xl">CELESTIAL</span>
+          <span className="celestial-title text-2xl">Celestial</span>
         </div>
         <button
           className="absolute right-5 w-7 h-7 rounded-full flex items-center justify-center
