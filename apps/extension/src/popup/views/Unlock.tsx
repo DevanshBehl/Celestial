@@ -39,14 +39,14 @@ export default function Unlock({ onUnlocked }: Props) {
   return (
     <div className="w-[360px] min-h-[600px] flex flex-col">
       {/* ---- Header bar ---- */}
-      <header className="flex items-center justify-center py-4 border-b border-nebula/10">
+      <header className="flex items-center justify-center py-4 border-b border-zinc-800">
         <div className="flex items-center gap-2">
           <Logo size={26} />
           <span className="celestial-title text-2xl">CELESTIAL</span>
         </div>
         <button
           className="absolute right-5 w-7 h-7 rounded-full flex items-center justify-center
-                     border border-nebula/20 text-star-muted hover:text-star hover:border-nebula/40 transition-colors"
+                     border border-moon/20 text-star-muted hover:text-star hover:border-moon/40 transition-colors"
           title="Help"
         >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
@@ -80,7 +80,7 @@ export default function Unlock({ onUnlocked }: Props) {
               value={password}
               onChange={e => { setPassword(e.target.value); setError(''); }}
               onKeyDown={e => { if (e.key === 'Enter') void handleUnlock(); }}
-              className="glass-input w-full px-4 py-3.5 text-sm text-star placeholder-star-dim"
+              className="w-full px-4 py-3.5 text-sm text-star bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-moon-50 transition-colors placeholder-star-dim"
               autoFocus
               autoComplete="current-password"
               disabled={loading}
@@ -106,7 +106,7 @@ export default function Unlock({ onUnlocked }: Props) {
           </div>
 
           {/* Forgot password link */}
-          <p className="text-nebula font-semibold text-sm cursor-pointer hover:text-nebula-light transition-colors">
+          <p className="text-moon font-semibold text-sm cursor-pointer hover:text-moon-light transition-colors">
             Forgot password
           </p>
         </motion.div>

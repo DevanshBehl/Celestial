@@ -66,20 +66,60 @@ export async function handleAccountMessage(
     const guard = await requireUnlockedVault(requestId);
     if (!guard.ok) return guard.response;
 
-    const { chainId } = payload as CreateAccountPayload;
+    const { chainId, name, walletId, password } = payload as CreateAccountPayload;
     const session = getSession();
     const { vault } = guard;
 
-    // Re-read password from vault key is not possible (non-extractable).
-    // We need the plaintext mnemonic — but we've only stored the vault key, not the password.
-    // The correct pattern: caller must re-provide password for new account derivation.
-    // For now we return NOT_IMPLEMENTED with a clear message.
-    // TODO: Accept password in CreateAccountPayload and decrypt mnemonic here.
-    return errorResponse(
-      requestId,
-      CelestialErrorCode.NOT_IMPLEMENTED,
-      'Account creation requires password re-entry — add password field to CreateAccountPayload',
-    );
+    let mnemonic: string;
+    try {
+      mnemonic = await decryptVaultMnemonic(vault, password);
+    } catch {
+      return errorResponse(requestId, CelestialErrorCode.VAULT_WRONG_PASSWORD, 'Invalid password');
+    }
+
+    const seed = await mnemonicToSeed(mnemonic);
+    const familyAccounts = session.accounts.filter(a => a.chainId === chainId);
+    const maxIndex = familyAccounts.reduce((max, a) => Math.max(max, a.index), -1);
+    const accountIndex = maxIndex + 1;
+    const accountId = crypto.randomUUID();
+
+    let privateKeyMaterial: string;
+    let address: string;
+    let derivationPath: string;
+    let chainFamily: ChainFamily;
+
+    if (chainId === ChainId.SOLANA) {
+      derivationPath = buildSolanaDerivationPath(accountIndex);
+      const derived = deriveSolanaAccount(seed, derivationPath);
+      privateKeyMaterial = derived.privateKeyHex;
+      address = derived.address;
+      chainFamily = ChainFamily.SVM;
+    } else {
+      derivationPath = buildEvmDerivationPath(accountIndex);
+      const derived = deriveEvmAccount(seed, derivationPath);
+      privateKeyMaterial = derived.privateKeyHex;
+      address = derived.address;
+      chainFamily = ChainFamily.EVM;
+    }
+
+    const updatedVault = await addAccountToVault(vault, password, accountId, privateKeyMaterial);
+    await setVault(updatedVault);
+
+    const newAccount: Account = {
+      id: accountId,
+      walletId,
+      name: name || `Account ${accountIndex + 1}`,
+      address,
+      chainFamily,
+      chainId,
+      derivationPath,
+      index: accountIndex,
+    };
+
+    const newAccounts = [...session.accounts, newAccount];
+    setSession({ accounts: newAccounts, activeAccountId: accountId });
+
+    return successResponse(requestId, { account: newAccount, allAccounts: newAccounts });
   }
 
   // ---- ACCOUNT_REMOVE ------------------------------------------------------

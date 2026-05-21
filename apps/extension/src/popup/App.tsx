@@ -41,7 +41,7 @@ function reducer(state: AppState, action: AppAction): AppState {
         ...state,
         status: 'ready',
         popupState: action.data.state,
-        accounts: action.data.state.vault.isLocked ? [] : state.accounts,
+        accounts: action.data.accounts,
         networks: action.data.networks,
         cexCredentials: action.data.cexCredentials,
       };
@@ -162,13 +162,13 @@ export default function App() {
 
   return (
     <div className="w-[360px] min-h-[600px] bg-void relative overflow-hidden">
-      {/* Background ambient glow — pure purple */}
+      {/* Background ambient glow — subtle moon glow */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 60% 40% at 50% -5%, rgba(171,159,242,0.10) 0%, transparent 70%), ' +
-            'radial-gradient(ellipse 35% 25% at 15% 90%, rgba(139,127,212,0.05) 0%, transparent 60%)',
+            'radial-gradient(ellipse 60% 40% at 50% -5%, rgba(255,255,255,0.03) 0%, transparent 70%), ' +
+            'radial-gradient(ellipse 35% 25% at 15% 90%, rgba(255,255,255,0.02) 0%, transparent 60%)',
         }}
       />
 
@@ -187,12 +187,13 @@ export default function App() {
 
         {activeView !== AppView.ONBOARDING && activeView !== AppView.UNLOCK && (
           <motion.div key="dashboard" {...PAGE_VARIANTS} className="relative z-10">
-            <Dashboard
-              popupState={popupState}
-              accounts={accounts}
-              networks={networks}
-              onLock={handleLock}
-            />
+                <Dashboard
+                  popupState={state.popupState!}
+                  accounts={state.accounts}
+                  networks={state.networks}
+                  onLock={() => dispatch({ type: 'VAULT_LOCKED' })}
+                  onRefresh={bootstrap}
+                />
           </motion.div>
         )}
       </AnimatePresence>
@@ -206,9 +207,9 @@ function LoadingScreen() {
   return (
     <div className="w-[360px] min-h-[600px] bg-void flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <div className="relative w-14 h-14">
-          <div className="absolute inset-0 rounded-full border-2 border-nebula/20" />
-          <div className="absolute inset-0 rounded-full border-t-2 border-nebula animate-spin" style={{ borderTopColor: '#ab9ff2' }} />
+        <div className="relative w-12 h-12">
+          <div className="absolute inset-0 rounded-full border-2 border-zinc-700" />
+          <div className="absolute inset-0 rounded-full border-t-2 border-moon-dim animate-spin" style={{ borderTopColor: '#ffffff' }} />
         </div>
         <p className="text-star-muted text-sm font-medium tracking-wide">Loading Celestial…</p>
       </div>

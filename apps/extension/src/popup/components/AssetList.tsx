@@ -26,11 +26,8 @@ export default function AssetList({ assets = [], loading = false }: Props) {
   if (assets.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-        <div
-          className="w-12 h-12 rounded-full flex items-center justify-center"
-          style={{ background: 'rgba(171,159,242,0.08)', border: '1px solid rgba(171,159,242,0.14)' }}
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-nebula">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center bg-zinc-900 border border-zinc-800">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-moon-50">
             <circle cx="10" cy="10" r="7" />
             <path d="M10 6v4l2.5 2.5" />
           </svg>

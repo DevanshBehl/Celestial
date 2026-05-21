@@ -22,13 +22,13 @@ export default function Logo({ size = 28, className = '' }: Props) {
     >
       <defs>
         <linearGradient id="smoon" x1="10%" y1="0%" x2="90%" y2="100%">
-          <stop offset="0%" stopColor="#fffdf4" />
-          <stop offset="50%" stopColor="#f0e8c8" />
-          <stop offset="100%" stopColor="#d8d0b0" />
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="50%" stopColor="#e4e4e7" />
+          <stop offset="100%" stopColor="#a1a1aa" />
         </linearGradient>
         <linearGradient id="sspk" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#fffef8" />
-          <stop offset="100%" stopColor="#e8e0c0" />
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="100%" stopColor="#d4d4d8" />
         </linearGradient>
       </defs>
 
@@ -45,7 +45,7 @@ export default function Logo({ size = 28, className = '' }: Props) {
       />
 
       {/* Tiny dot */}
-      <circle cx="23.5" cy="11.5" r="1" fill="#f0e8d0" opacity="0.8" />
+      <circle cx="23.5" cy="11.5" r="1" fill="#e4e4e7" opacity="0.8" />
     </svg>
   );
 }
@@ -54,8 +54,8 @@ export default function Logo({ size = 28, className = '' }: Props) {
 // All colors are moonlight whites / warm silvers — zero purple.
 
 function StarField({ count, area }: { count: number; area: number }) {
-  // Moonlight-only star colors
-  const STAR_COLORS = ['#fffef8', '#f0e8d0', '#e8e0c0', '#fff8e8', '#d8d4c0', '#ffffff'];
+  // Silver/grey star colors
+  const STAR_COLORS = ['#ffffff', '#f4f4f5', '#e4e4e7', '#d4d4d8', '#a1a1aa'];
 
   const stars = Array.from({ length: count }, (_, i) => {
     const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5;
@@ -156,7 +156,7 @@ export function AnimatedMoon({ size = 100 }: { size?: number }) {
         style={{
           width: size * 1.6,
           height: size * 1.6,
-          background: 'radial-gradient(circle, rgba(255,252,240,0.10) 0%, rgba(240,232,200,0.04) 50%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(212,212,216,0.02) 50%, transparent 70%)',
         }}
         animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.65, 0.3] }}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
@@ -168,7 +168,7 @@ export function AnimatedMoon({ size = 100 }: { size?: number }) {
         style={{
           width: size * 1.1,
           height: size * 1.1,
-          background: 'radial-gradient(circle, rgba(255,253,244,0.20) 0%, rgba(255,248,232,0.08) 40%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(228,228,231,0.05) 40%, transparent 65%)',
         }}
         animate={{ scale: [1, 1.12, 1], opacity: [0.4, 0.9, 0.4] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
@@ -182,7 +182,7 @@ export function AnimatedMoon({ size = 100 }: { size?: number }) {
           style={{
             width: 1,
             height: size * 0.55,
-            background: 'linear-gradient(to bottom, rgba(255,252,240,0.18), transparent)',
+            background: 'linear-gradient(to bottom, rgba(255,255,255,0.15), transparent)',
             transformOrigin: 'bottom center',
             left: '50%',
             top: '50%',
@@ -212,9 +212,9 @@ export function AnimatedMoon({ size = 100 }: { size?: number }) {
           y: [0, -10, 0],
           rotate: [0, 3, 0],
           filter: [
-            'drop-shadow(0 0 14px rgba(255,252,240,0.30)) drop-shadow(0 4px 20px rgba(240,232,200,0.18))',
-            'drop-shadow(0 0 32px rgba(255,252,240,0.55)) drop-shadow(0 4px 40px rgba(240,232,200,0.35))',
-            'drop-shadow(0 0 14px rgba(255,252,240,0.30)) drop-shadow(0 4px 20px rgba(240,232,200,0.18))',
+            'drop-shadow(0 0 10px rgba(255,255,255,0.20)) drop-shadow(0 4px 15px rgba(212,212,216,0.15))',
+            'drop-shadow(0 0 25px rgba(255,255,255,0.40)) drop-shadow(0 4px 30px rgba(212,212,216,0.25))',
+            'drop-shadow(0 0 10px rgba(255,255,255,0.20)) drop-shadow(0 4px 15px rgba(212,212,216,0.15))',
           ],
         }}
         transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -222,22 +222,22 @@ export function AnimatedMoon({ size = 100 }: { size?: number }) {
         <defs>
           {/* Moon body: pure warm whites → pale ivory */}
           <linearGradient id="moon-body" x1="15%" y1="5%" x2="85%" y2="95%">
-            <stop offset="0%" stopColor="#fffef8" />
-            <stop offset="25%" stopColor="#fff8e8" />
-            <stop offset="50%" stopColor="#f0e8c8" />
-            <stop offset="75%" stopColor="#e8e0c0" />
-            <stop offset="100%" stopColor="#d8d0b0" />
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="25%" stopColor="#f4f4f5" />
+            <stop offset="50%" stopColor="#e4e4e7" />
+            <stop offset="75%" stopColor="#d4d4d8" />
+            <stop offset="100%" stopColor="#a1a1aa" />
           </linearGradient>
 
           {/* Inner highlight shimmer */}
           <radialGradient id="moon-hi" cx="45%" cy="35%" r="40%">
-            <stop offset="0%" stopColor="rgba(255,253,244,0.25)" />
+            <stop offset="0%" stopColor="rgba(255,255,255,0.20)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
           {/* Crater shading */}
           <radialGradient id="crater" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(200,192,160,0.15)" />
+            <stop offset="0%" stopColor="rgba(161,161,170,0.15)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
         </defs>

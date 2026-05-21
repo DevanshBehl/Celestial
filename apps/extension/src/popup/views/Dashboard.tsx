@@ -7,17 +7,19 @@ import { isSuccess, sendToBackground } from '../../shared/messaging';
 import Logo from '../components/Logo';
 import PortfolioView from '../components/PortfolioView';
 import AssetList from '../components/AssetList';
+import AccountSwitcher from '../components/AccountSwitcher';
 
 interface Props {
   popupState: PopupState;
   accounts: Account[];
   networks: NetworkConfig[];
   onLock: () => void;
+  onRefresh: () => void;
 }
 
 type Tab = 'tokens' | 'collectibles';
 
-export default function Dashboard({ popupState, accounts, networks, onLock }: Props) {
+export default function Dashboard({ popupState, accounts, networks, onLock, onRefresh }: Props) {
   const [tab, setTab] = useState<Tab>('tokens');
   const [locking, setLocking] = useState(false);
 
@@ -42,28 +44,36 @@ export default function Dashboard({ popupState, accounts, networks, onLock }: Pr
   const seed1 = address.charCodeAt(2) ?? 0;
   const seed2 = address.charCodeAt(4) ?? 0;
 
+  async function handleSwitchAccount(accountId: string) {
+    await sendToBackground(MessageType.ACCOUNT_SWITCH, { accountId });
+    onRefresh();
+  }
+
+  async function handleAddAccount(password: string): Promise<{ success: boolean; error?: string }> {
+    const res = await sendToBackground(MessageType.ACCOUNT_CREATE, {
+      walletId: activeAccount?.walletId ?? '',
+      chainId: activeAccount?.chainId ?? 1,
+      password,
+      name: '',
+    });
+    if (isSuccess(res)) {
+      onRefresh();
+      return { success: true };
+    }
+    return { success: false, error: res.error.message };
+  }
+
   return (
     <div className="w-[360px] min-h-[600px] flex flex-col">
       {/* ---- Top bar ---- */}
       <header className="flex items-center justify-between px-4 py-2.5">
         {/* User identity */}
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-8 h-8 rounded-full flex-shrink-0"
-            style={{
-              background: `linear-gradient(135deg, hsl(${seed1 * 7}deg, 60%, 50%) 0%, hsl(${seed2 * 7}deg, 50%, 35%) 100%)`,
-            }}
-          />
-          <div className="flex flex-col">
-            <span className="text-star text-xs font-semibold leading-none flex items-center gap-1">
-              @{name}
-            </span>
-            <span className="text-star-dim text-[10px] font-mono mt-0.5 flex items-center gap-1">
-              {truncated}
-              <CopyIcon />
-            </span>
-          </div>
-        </div>
+        <AccountSwitcher
+          accounts={accounts}
+          activeAccountId={vault.activeAccountId ?? ''}
+          onSwitch={handleSwitchAccount}
+          onAddAccount={handleAddAccount}
+        />
 
         {/* Right icons */}
         <div className="flex items-center gap-2">
@@ -121,7 +131,7 @@ export default function Dashboard({ popupState, accounts, networks, onLock }: Pr
                 <motion.div
                   layoutId="tab-indicator"
                   className="absolute bottom-0 inset-x-0 h-0.5 rounded-full"
-                  style={{ background: '#ab9ff2' }}
+                  style={{ background: '#ffffff' }}
                 />
               )}
             </button>
@@ -161,10 +171,9 @@ function CollectiblesTab() {
   return (
     <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
       <div
-        className="w-12 h-12 rounded-full flex items-center justify-center"
-        style={{ background: 'rgba(171,159,242,0.08)', border: '1px solid rgba(171,159,242,0.14)' }}
+        className="w-12 h-12 rounded-full flex items-center justify-center bg-zinc-900 border border-zinc-800"
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-nebula">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-moon-50">
           <rect x="3" y="3" width="14" height="14" rx="2" />
           <path d="M3 12l4-4 3 3 3-3 4 4" />
         </svg>

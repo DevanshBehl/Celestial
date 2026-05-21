@@ -20,81 +20,57 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ---- Celestial title — cartoonish meme font, pure purple ---------------- */
+/* ---- Celestial title — clean modern display -------------------------------- */
 
 .celestial-title {
-  font-family: 'Bangers', cursive;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  color: #ab9ff2;
-  text-shadow:
-    0 0 12px rgba(171, 159, 242, 0.50),
-    0 0 30px rgba(171, 159, 242, 0.25),
-    0 2px 4px rgba(0, 0, 0, 0.40);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #f4f4f5; /* moon-light */
 }
 
-/* ---- Glassmorphism utilities ------------------------------------------- */
+/* ---- Solid Components ---------------------------------------------------- */
 
 @layer components {
-  .glass {
-    background: rgba(12, 10, 28, 0.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(171, 159, 242, 0.10);
-    border-radius: 16px;
-  }
-
-  .glass-strong {
-    background: rgba(12, 10, 28, 0.90);
-    backdrop-filter: blur(32px);
-    -webkit-backdrop-filter: blur(32px);
-    border: 1px solid rgba(171, 159, 242, 0.18);
-    border-radius: 16px;
-  }
-
-  .glass-input {
-    background: rgba(16, 14, 32, 0.75);
-    border: 1px solid rgba(171, 159, 242, 0.16);
-    border-radius: 10px;
-    transition: border-color 200ms ease, box-shadow 200ms ease;
-  }
-
-  .glass-input:focus {
-    outline: none;
-    border-color: rgba(171, 159, 242, 0.55);
-    box-shadow: 0 0 0 3px rgba(171, 159, 242, 0.12), 0 0 16px rgba(171, 159, 242, 0.10);
-  }
-
   .btn-primary {
     @apply rounded-xl px-5 py-3.5 font-semibold text-sm transition-all duration-200
       active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed;
-    background: linear-gradient(135deg, #ab9ff2 0%, #c4bbf7 100%);
-    color: #0a0a14;
-    box-shadow: 0 0 20px rgba(171, 159, 242, 0.30), 0 4px 12px rgba(0, 0, 0, 0.25);
+    background: #ffffff;
+    color: #000000;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
   }
   .btn-primary:hover {
-    background: linear-gradient(135deg, #c4bbf7 0%, #e0dbfa 100%);
-    box-shadow: 0 0 32px rgba(171, 159, 242, 0.45), 0 4px 16px rgba(0, 0, 0, 0.30);
+    background: #f4f4f5;
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
   }
 
   .btn-secondary {
     @apply rounded-xl px-5 py-3.5 font-semibold text-sm text-star-muted transition-all duration-200
       active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed;
-    background: rgba(22, 22, 44, 0.80);
-    border: 1px solid rgba(171, 159, 242, 0.14);
+    background: #18181b; /* zinc-900 */
+    border: 1px solid #27272a; /* zinc-800 */
   }
   .btn-secondary:hover {
-    background: rgba(30, 30, 54, 0.90);
-    border-color: rgba(171, 159, 242, 0.30);
-    color: #f5f0ff;
+    background: #27272a;
+    border-color: #3f3f46;
+    color: #ffffff;
   }
 
   .btn-ghost {
-    @apply rounded-xl px-5 py-3.5 font-semibold text-sm text-nebula-light transition-all duration-200
+    @apply rounded-xl px-5 py-3.5 font-semibold text-sm text-star-muted transition-all duration-200
       active:scale-[0.97];
   }
   .btn-ghost:hover {
-    background: rgba(171, 159, 242, 0.08);
+    background: #27272a; /* zinc-800 */
+    color: #ffffff;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   .gradient-text {
@@ -105,20 +81,20 @@ body {
   .action-card {
     @apply flex flex-col items-center justify-center gap-2 rounded-2xl text-xs font-medium
       text-star-muted transition-all duration-200 cursor-pointer;
-    background: rgba(22, 22, 44, 0.65);
-    border: 1px solid rgba(171, 159, 242, 0.08);
+    background: #18181b; /* zinc-900 */
+    border: 1px solid #27272a; /* zinc-800 */
     padding: 14px 10px;
   }
   .action-card:hover {
-    background: rgba(30, 30, 54, 0.85);
-    border-color: rgba(171, 159, 242, 0.25);
-    color: #f5f0ff;
-    box-shadow: 0 0 16px rgba(171, 159, 242, 0.10);
+    background: #27272a;
+    border-color: #3f3f46;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.05);
   }
 
   .action-icon {
     @apply w-9 h-9 rounded-full flex items-center justify-center;
-    color: #ab9ff2;
+    color: #ffffff;
   }
 }
 
@@ -131,9 +107,9 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(171, 159, 242, 0.20);
+  background: #3f3f46;
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(171, 159, 242, 0.40);
+  background: #52525b;
 }

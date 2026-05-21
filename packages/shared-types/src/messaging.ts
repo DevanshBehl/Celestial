@@ -153,6 +153,7 @@ export interface CreateAccountPayload {
   walletId: WalletId;
   name: string;
   chainId: ChainId;
+  password: string;
 }
 
 export interface RenameAccountPayload {
@@ -388,6 +389,7 @@ export interface DAppRequestSyncData {
 
 export interface PopupInitResponse {
   state: PopupState;
+  accounts: Account[];
   networks: NetworkConfig[];
   connectedDApps: ConnectedDApp[];
   cexCredentials: CexCredentialsMeta[];

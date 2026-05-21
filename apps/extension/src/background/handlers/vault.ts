@@ -145,6 +145,7 @@ export async function handleVaultMessage(
 
     const data: PopupInitResponse = {
       state: popupState,
+      accounts: session.accounts,
       networks: allNetworks,
       connectedDApps,
       cexCredentials,

@@ -79,7 +79,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
   return (
     <div className="w-[360px] min-h-[600px] flex flex-col">
       {/* Header */}
-      <header className="flex items-center justify-center gap-2 px-4 py-3 border-b border-nebula/10">
+      <header className="flex items-center justify-center gap-2 px-4 py-3 border-b border-zinc-800">
         <Logo size={20} />
         <span className="celestial-title text-xl">CELESTIAL</span>
       </header>
@@ -125,10 +125,9 @@ export default function Onboarding({ onCreated, onImported }: Props) {
                   {words.map((word, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-1.5 px-2 py-2 rounded-lg text-xs"
-                      style={{ background: 'rgba(171,159,242,0.08)', border: '1px solid rgba(171,159,242,0.14)' }}
+                      className="flex items-center gap-1.5 px-2 py-2 rounded-lg text-xs bg-zinc-900 border border-zinc-800"
                     >
-                      <span className="text-nebula font-mono w-4 flex-shrink-0 text-[10px]">{i + 1}.</span>
+                      <span className="text-moon-50 font-mono w-4 flex-shrink-0 text-[10px]">{i + 1}.</span>
                       <span className="text-star font-medium">{word}</span>
                     </div>
                   ))}
@@ -138,7 +137,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
                     onClick={() => setRevealed(true)}
                     className="absolute inset-0 flex items-center justify-center"
                   >
-                    <span className="glass px-4 py-2 text-sm font-medium text-star hover:border-nebula/30 transition-colors">
+                    <span className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm font-medium text-star hover:border-zinc-600 transition-colors">
                       Click to reveal
                     </span>
                   </button>
@@ -172,7 +171,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
                 placeholder="Password (min. 8 characters)"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="glass-input w-full px-4 py-3.5 text-sm text-star placeholder-star-dim"
+                className="w-full px-4 py-3.5 text-sm text-star bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-moon-50 transition-colors placeholder-star-dim"
                 autoFocus
               />
               <input
@@ -180,7 +179,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
                 placeholder="Confirm password"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
-                className="glass-input w-full px-4 py-3.5 text-sm text-star placeholder-star-dim"
+                className="w-full px-4 py-3.5 text-sm text-star bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-moon-50 transition-colors placeholder-star-dim"
                 onKeyDown={e => { if (e.key === 'Enter') void handleCreateWallet(); }}
               />
 
@@ -207,7 +206,7 @@ export default function Onboarding({ onCreated, onImported }: Props) {
                 value={importPhrase}
                 onChange={e => setImportPhrase(e.target.value)}
                 rows={4}
-                className="glass-input w-full px-4 py-3.5 text-sm text-star placeholder-star-dim resize-none"
+                className="w-full px-4 py-3.5 text-sm text-star bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-moon-50 transition-colors placeholder-star-dim resize-none"
                 spellCheck={false}
                 autoComplete="off"
               />
@@ -216,14 +215,14 @@ export default function Onboarding({ onCreated, onImported }: Props) {
                 placeholder="New password (min. 8 characters)"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="glass-input w-full px-4 py-3.5 text-sm text-star placeholder-star-dim"
+                className="w-full px-4 py-3.5 text-sm text-star bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-moon-50 transition-colors placeholder-star-dim"
               />
               <input
                 type="password"
                 placeholder="Confirm password"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
-                className="glass-input w-full px-4 py-3.5 text-sm text-star placeholder-star-dim"
+                className="w-full px-4 py-3.5 text-sm text-star bg-zinc-900 border border-zinc-800 rounded-xl focus:outline-none focus:border-moon-50 transition-colors placeholder-star-dim"
                 onKeyDown={e => { if (e.key === 'Enter') void handleImportWallet(); }}
               />
 
