@@ -24,7 +24,7 @@ import {
 } from '@celestial/shared-types';
 import { errorResponse, successResponse } from '../../shared/messaging';
 import { getSession, setSession } from '../session';
-import { getVault, setVault } from '../storage';
+import { getVault, setVault, setAccountsMeta } from '../storage';
 import { requireUnlockedVault } from './vault';
 import { decryptVaultMnemonic } from '@celestial/core-crypto';
 
@@ -58,6 +58,7 @@ export async function handleAccountMessage(
     const session = getSession();
     const updated = session.accounts.map(a => (a.id === accountId ? { ...a, name } : a));
     setSession({ accounts: updated });
+    await setAccountsMeta(updated);
     return successResponse(requestId, { accountId, name });
   }
 
@@ -118,6 +119,7 @@ export async function handleAccountMessage(
 
     const newAccounts = [...session.accounts, newAccount];
     setSession({ accounts: newAccounts, activeAccountId: accountId });
+    await setAccountsMeta(newAccounts);
 
     return successResponse(requestId, { account: newAccount, allAccounts: newAccounts });
   }

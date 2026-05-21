@@ -16,6 +16,7 @@ const KEY = {
   CUSTOM_NETWORKS: 'customNetworks',
   CONNECTED_DAPPS: 'connectedDApps',
   CEX_META: 'cexMeta',
+  ACCOUNTS_META: 'accountsMeta',
 } as const;
 
 type StorageKey = (typeof KEY)[keyof typeof KEY];
@@ -93,4 +94,17 @@ export async function getCexMeta(): Promise<CexCredentialsMeta[]> {
 
 export async function setCexMeta(meta: CexCredentialsMeta[]): Promise<void> {
   await set(KEY.CEX_META, meta);
+}
+
+// ---- Accounts metadata ---------------------------------------------------
+// Only metadata (no private keys) is stored here; keys live inside the encrypted vault.
+
+import type { Account } from '@celestial/shared-types';
+
+export async function getAccountsMeta(): Promise<Account[]> {
+  return (await get<Account[]>(KEY.ACCOUNTS_META)) ?? [];
+}
+
+export async function setAccountsMeta(accounts: Account[]): Promise<void> {
+  await set(KEY.ACCOUNTS_META, accounts);
 }

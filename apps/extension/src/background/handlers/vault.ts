@@ -41,8 +41,11 @@ import {
   getCustomNetworks,
   getSettings,
   getVault,
+  setConnectedDApps,
   setSettings,
   setVault,
+  getAccountsMeta,
+  setAccountsMeta,
 } from '../storage';
 
 // ---- Helpers --------------------------------------------------------------
@@ -190,6 +193,7 @@ export async function handleVaultMessage(
       autoLockMs: settings.autoLockMs,
     });
     scheduleAutoLock(settings.autoLockMs);
+    await setAccountsMeta([account]);
 
     const vaultState = await buildVaultState();
     const data: VaultCreateResponse = {
@@ -238,6 +242,7 @@ export async function handleVaultMessage(
       autoLockMs: settings.autoLockMs,
     });
     scheduleAutoLock(settings.autoLockMs);
+    await setAccountsMeta([account]);
 
     const vaultState = await buildVaultState();
     const data: VaultCreateResponse = {
@@ -265,22 +270,18 @@ export async function handleVaultMessage(
     }
 
     // Re-derive accounts stored in the vault accounts map.
-    // For the scaffold we derive account 0 fresh from seed if no accounts are stored yet.
+    // For the scaffold we were originally deriving account 0 fresh.
+    // Now we correctly load the account metadata from storage!
     const seed = await mnemonicToSeed(mnemonic);
-    const accountEntries = Object.keys(vault.accounts);
-
-    let accounts: Account[] = [];
-    if (accountEntries.length > 0) {
-      // Accounts were stored by a previous session — just read stored metadata.
-      // (Full keyring is reconstructed on demand during signing.)
-      // For now we read back private key and rebuild Account metadata from it.
-      // TODO: Store Account metadata in chrome.storage alongside the vault so we don't need to re-derive.
+    let accounts = await getAccountsMeta();
+    
+    // Fallback if storage was cleared but vault still exists
+    if (accounts.length === 0 && Object.keys(vault.accounts).length > 0) {
       const path = buildEvmDerivationPath(0);
       const derived = deriveEvmAccount(seed, path);
-      const accountId = accountEntries[0]!;
       accounts = [
         {
-          id: accountId,
+          id: Object.keys(vault.accounts)[0]!,
           walletId: 'recovered',
           name: 'Account 1',
           address: derived.address,
@@ -290,6 +291,7 @@ export async function handleVaultMessage(
           index: 0,
         },
       ];
+      await setAccountsMeta(accounts);
     }
 
     const vaultKey = await deriveVaultKey(password, vault.salt);
