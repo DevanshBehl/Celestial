@@ -10,6 +10,8 @@ import PortfolioView from '../components/PortfolioView';
 import AssetList from '../components/AssetList';
 import AccountSwitcher from '../components/AccountSwitcher';
 import SettingsView from '../components/SettingsView';
+import SendView from '../components/SendView';
+import HistoryView from '../components/HistoryView';
 
 interface Props {
   popupState: PopupState;
@@ -19,12 +21,13 @@ interface Props {
   onRefresh: () => void;
 }
 
-type Tab = 'tokens' | 'collectibles';
+type Tab = 'tokens' | 'collectibles' | 'history';
 
 export default function Dashboard({ popupState, accounts, networks, onLock, onRefresh }: Props) {
   const [tab, setTab] = useState<Tab>('tokens');
   const [locking, setLocking] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showSend, setShowSend] = useState(false);
   const [balance, setBalance] = useState('0.00');
 
   const { vault } = popupState;
@@ -161,6 +164,7 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
         balance={balance} 
         symbol={activeNetwork.nativeCurrency.symbol} 
         change24h={0} 
+        onSendClick={() => setShowSend(true)}
       />
 
       {/* ---- Tab bar ---- */}
@@ -208,6 +212,7 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
           >
             {tab === 'tokens' && <AssetList />}
             {tab === 'collectibles' && <CollectiblesTab />}
+            {tab === 'history' && activeAccount && activeNetwork && <HistoryView account={activeAccount} network={activeNetwork} />}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -218,9 +223,9 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
         animate={{ y: 0, opacity: 1 }}
         className="flex items-center justify-around px-4 py-3 z-10 glass-panel border-t-0"
       >
-        <NavItem icon="home" label="Home" active />
+        <NavItem icon="home" label="Home" active={tab !== 'history'} onClick={() => setTab('tokens')} />
         <NavItem icon="swap" label="Swap" />
-        <NavItem icon="clock" label="History" />
+        <NavItem icon="clock" label="History" active={tab === 'history'} onClick={() => setTab('history')} />
         <NavItem icon="search" label="Search" />
       </motion.nav>
 
@@ -233,6 +238,18 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
             activeAccountId={vault.activeAccountId ?? ''}
             activeChainId={vault.activeChainId}
             onClose={() => setShowSettings(false)}
+            onRefresh={onRefresh}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ---- Send Overlay ---- */}
+      <AnimatePresence>
+        {showSend && activeAccount && activeNetwork && (
+          <SendView
+            account={activeAccount}
+            network={activeNetwork}
+            onClose={() => setShowSend(false)}
             onRefresh={onRefresh}
           />
         )}
@@ -290,10 +307,10 @@ function CopyIcon() {
   );
 }
 
-function NavItem({ icon, label, active = false }: { icon: string; label: string; active?: boolean }) {
+function NavItem({ icon, label, active = false, onClick }: { icon: string; label: string; active?: boolean; onClick?: () => void }) {
   const color = active ? 'text-star' : 'text-star-dim hover:text-star-muted';
   return (
-    <button className={`flex flex-col items-center gap-1 transition-colors ${color}`}>
+    <button onClick={onClick} className={`flex flex-col items-center gap-1 transition-colors ${color}`}>
       <NavIcon icon={icon} active={active} />
       {/* Invisible label for accessibility */}
       <span className="sr-only">{label}</span>

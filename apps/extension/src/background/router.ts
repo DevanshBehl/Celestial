@@ -4,6 +4,7 @@ import { errorResponse } from '../shared/messaging';
 import { handleVaultMessage } from './handlers/vault';
 import { handleAccountMessage } from './handlers/account';
 import { handleNetworkMessage } from './handlers/network';
+import { handleTxSend } from './handlers/tx';
 
 const VAULT_TYPES = new Set<MessageType>([
   MessageType.VAULT_UNLOCK,
@@ -32,6 +33,10 @@ const NETWORK_TYPES = new Set<MessageType>([
   MessageType.NETWORK_REMOVE_CUSTOM,
 ]);
 
+const TX_TYPES = new Set<MessageType>([
+  MessageType.TX_SEND,
+]);
+
 // Routes every incoming chrome.runtime.onMessage to the correct domain handler.
 // All handlers are async; errors thrown from them are caught here and returned
 // as structured ExtensionErrorResponse objects so the popup always gets a reply.
@@ -45,6 +50,7 @@ export async function routeMessage(
     if (VAULT_TYPES.has(type)) return handleVaultMessage(message, sender);
     if (ACCOUNT_TYPES.has(type)) return handleAccountMessage(message, sender);
     if (NETWORK_TYPES.has(type)) return handleNetworkMessage(message, sender);
+    if (TX_TYPES.has(type)) return handleTxSend(message as any, sender);
 
     // Remaining message types are stubs — they will be filled in subsequent sprints.
     return errorResponse(

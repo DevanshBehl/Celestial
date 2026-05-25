@@ -6,14 +6,17 @@ interface Props {
   balance: string;
   symbol: string;
   change24h: number;
+  onSendClick?: () => void;
 }
 
 const ACTIONS = ['Send', 'Swap', 'Receive', 'Buy'] as const;
 type Action = typeof ACTIONS[number];
 
-export default function PortfolioView({ account, balance, symbol, change24h }: Props) {
+export default function PortfolioView({ account, balance, symbol, change24h, onSendClick }: Props) {
+  if (!account) return null;
+
   const changePositive = change24h >= 0;
-  const changeColor = changePositive ? 'text-success' : 'text-danger';
+  const changeColor = changePositive ? 'text-green-400' : 'text-red-400';
   const changePrefix = changePositive ? '+' : '';
 
   return (
@@ -45,6 +48,11 @@ export default function PortfolioView({ account, balance, symbol, change24h }: P
         {ACTIONS.map((action, i) => (
           <motion.button
             key={action}
+            onClick={() => {
+              if (action === 'Send' && onSendClick) {
+                onSendClick();
+              }
+            }}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + i * 0.05 }}
