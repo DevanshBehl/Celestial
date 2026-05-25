@@ -96,6 +96,42 @@ body {
     @apply w-9 h-9 rounded-full flex items-center justify-center;
     color: #ffffff;
   }
+
+  /* ---- Cosmic Glassmorphism ---- */
+  
+  .glass-panel {
+    background: rgba(24, 24, 27, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-btn {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .glass-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+  }
+
+  /* ---- Glow and Gradients ---- */
+  
+  .text-glow {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  }
+  
+  .celestial-gradient {
+    background: radial-gradient(circle at top left, #1a153a 0%, #000000 60%);
+  }
+  
+  .neon-blue {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  }
 }
 
 /* ---- Scrollbar ---------------------------------------------------------- */

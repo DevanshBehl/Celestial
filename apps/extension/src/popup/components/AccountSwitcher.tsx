@@ -74,9 +74,11 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
   return (
     <div className="relative" ref={containerRef}>
       {/* Trigger */}
-      <button
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 px-2 py-1.5 -ml-2 rounded-xl hover:bg-void-200 transition-colors"
+        className="flex items-center gap-2.5 px-2 py-1.5 -ml-2 rounded-xl hover:bg-void-200/50 transition-colors"
       >
         {activeAccount && renderAvatar(activeAccount.address)}
         <div className="flex flex-col items-start">
@@ -101,7 +103,7 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
               : ''}
           </span>
         </div>
-      </button>
+      </motion.button>
 
       {/* Dropdown Menu */}
       <AnimatePresence>
@@ -111,7 +113,7 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden z-50 flex flex-col"
+            className="absolute top-full left-0 mt-2 w-64 glass-panel rounded-xl overflow-hidden z-50 flex flex-col"
             style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}
           >
             {isAdding ? (

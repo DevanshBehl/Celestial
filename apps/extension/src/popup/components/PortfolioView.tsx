@@ -1,4 +1,5 @@
 import type { Account } from '@celestial/shared-types';
+import { motion } from 'framer-motion';
 
 interface Props {
   account: Account | undefined;
@@ -16,11 +17,21 @@ export default function PortfolioView({ account, balance, symbol, change24h }: P
   const changePrefix = changePositive ? '+' : '';
 
   return (
-    <div className="flex flex-col items-center gap-4 py-5">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+      className="flex flex-col items-center gap-6 py-8 relative z-10"
+    >
       {/* Portfolio value */}
-      <div className="text-center">
-        <p className="text-3xl font-bold text-star tracking-tight leading-none">
-          {balance} <span className="text-xl text-star-dim">{symbol}</span>
+      <div className="text-center relative">
+        <motion.div
+          animate={{ opacity: [0.5, 0.8, 0.5] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          className="absolute inset-0 blur-2xl bg-indigo-500/20 rounded-full"
+        />
+        <p className="text-4xl font-bold text-star tracking-tight leading-none text-glow relative z-10">
+          {balance} <span className="text-2xl text-star-dim">{symbol}</span>
         </p>
         {change24h !== 0 && (
           <p className={`text-xs mt-2 font-medium ${changeColor}`}>
@@ -30,20 +41,25 @@ export default function PortfolioView({ account, balance, symbol, change24h }: P
       </div>
 
       {/* Quick actions — Phantom-style grid */}
-      <div className="grid grid-cols-4 gap-2 w-full px-4">
-        {ACTIONS.map(action => (
-          <button
+      <div className="grid grid-cols-4 gap-3 w-full px-5">
+        {ACTIONS.map((action, i) => (
+          <motion.button
             key={action}
-            className="action-card"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + i * 0.05 }}
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex flex-col items-center justify-center gap-2 rounded-2xl text-xs font-medium text-star transition-colors glass-btn py-3.5"
           >
-            <div className="action-icon">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center text-star bg-white/5">
               <ActionIcon action={action} />
             </div>
-            <span className="text-[11px]">{action}</span>
-          </button>
+            <span className="text-[11px] font-semibold tracking-wide">{action}</span>
+          </motion.button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

@@ -85,9 +85,25 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
   }
 
   return (
-    <div className="w-[360px] min-h-[600px] flex flex-col">
+    <div className="w-[360px] min-h-[600px] flex flex-col relative overflow-hidden celestial-gradient">
+      {/* Background ambient orbs */}
+      <motion.div 
+        className="absolute -top-[20%] -left-[20%] w-[250px] h-[250px] rounded-full bg-indigo-500/30 blur-[80px] pointer-events-none"
+        animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div 
+        className="absolute -bottom-[10%] -right-[10%] w-[300px] h-[300px] rounded-full bg-purple-600/20 blur-[100px] pointer-events-none"
+        animate={{ x: [0, -40, 0], y: [0, -50, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
       {/* ---- Top bar ---- */}
-      <header className="flex items-center justify-between px-4 py-2.5">
+      <motion.header 
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="flex items-center justify-between px-4 py-2.5 z-10 glass-panel border-b-0"
+      >
         {/* User identity */}
         <AccountSwitcher
           accounts={accounts}
@@ -117,21 +133,27 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
             </svg>
           </IconButton>
         </div>
-      </header>
+      </motion.header>
 
       {/* ---- Testnet mode banner ---- */}
-      {activeNetwork?.isTestnet && (
-        <div
-          className="mx-4 mb-2 px-3 py-1.5 rounded-lg text-xs font-medium text-center"
-          style={{
-            background: 'rgba(184, 144, 48, 0.15)',
-            color: '#d4a840',
-            border: '1px solid rgba(184, 144, 48, 0.25)',
-          }}
-        >
-          You are currently in Testnet Mode
-        </div>
-      )}
+      <AnimatePresence>
+        {activeNetwork?.isTestnet && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mx-4 mb-2 mt-2 px-3 py-1.5 rounded-lg text-xs font-medium text-center z-10 relative overflow-hidden"
+            style={{
+              background: 'rgba(184, 144, 48, 0.15)',
+              color: '#d4a840',
+              border: '1px solid rgba(184, 144, 48, 0.25)',
+              boxShadow: '0 0 20px rgba(184, 144, 48, 0.1)'
+            }}
+          >
+            You are currently in Testnet Mode
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ---- Portfolio section ---- */}
       <PortfolioView 
@@ -142,7 +164,7 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
       />
 
       {/* ---- Tab bar ---- */}
-      <div className="flex items-center justify-between px-4 border-b border-void-300">
+      <div className="flex items-center justify-between px-4 border-b border-void-300/30 z-10 relative">
         <div className="flex gap-0">
           {(['tokens', 'collectibles'] as Tab[]).map(t => (
             <button
@@ -175,18 +197,32 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
       </div>
 
       {/* ---- Tab content ---- */}
-      <div className="flex-1 overflow-y-auto px-2 py-2">
-        {tab === 'tokens' && <AssetList />}
-        {tab === 'collectibles' && <CollectiblesTab />}
+      <div className="flex-1 overflow-y-auto px-2 py-2 z-10 relative scrollbar-hide">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={tab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+          >
+            {tab === 'tokens' && <AssetList />}
+            {tab === 'collectibles' && <CollectiblesTab />}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* ---- Bottom nav ---- */}
-      <nav className="flex items-center justify-around px-4 py-3 border-t border-void-300">
+      <motion.nav 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="flex items-center justify-around px-4 py-3 z-10 glass-panel border-t-0"
+      >
         <NavItem icon="home" label="Home" active />
         <NavItem icon="swap" label="Swap" />
         <NavItem icon="clock" label="History" />
         <NavItem icon="search" label="Search" />
-      </nav>
+      </motion.nav>
 
       {/* ---- Settings Overlay ---- */}
       <AnimatePresence>
