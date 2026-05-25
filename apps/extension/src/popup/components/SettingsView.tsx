@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Account, NetworkConfig } from '@celestial/shared-types';
+import type { Account, NetworkConfig, ExportMnemonicResponse, ExportKeyResponse } from '@celestial/shared-types';
 import { MessageType, ChainId } from '@celestial/shared-types';
 import { sendToBackground, isSuccess } from '../../shared/messaging';
 
@@ -37,7 +37,7 @@ export default function SettingsView({ accounts, networks, activeAccountId, acti
     setLoading(true);
 
     if (viewingSecret === 'seed') {
-      const res = await sendToBackground(MessageType.VAULT_EXPORT_MNEMONIC, { password });
+      const res = await sendToBackground<ExportMnemonicResponse>(MessageType.VAULT_EXPORT_MNEMONIC, { password });
       if (isSuccess(res)) {
         setSecretValue(res.data.mnemonic);
         setPassword('');
@@ -46,7 +46,7 @@ export default function SettingsView({ accounts, networks, activeAccountId, acti
       }
     } else if (viewingSecret === 'privateKey') {
       if (!activeAccount) return;
-      const res = await sendToBackground(MessageType.ACCOUNT_EXPORT_KEY, { 
+      const res = await sendToBackground<ExportKeyResponse>(MessageType.ACCOUNT_EXPORT_KEY, { 
         accountId: activeAccount.id, 
         password 
       });

@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Account, NetworkConfig, PopupState } from '@celestial/shared-types';
 import { MessageType } from '@celestial/shared-types';
 import { NETWORK_BY_CHAIN_ID } from '../../shared/constants';
 import { isSuccess, sendToBackground } from '../../shared/messaging';
+import { fetchBalance } from '../../shared/rpc';
 import Logo from '../components/Logo';
 import PortfolioView from '../components/PortfolioView';
 import AssetList from '../components/AssetList';
@@ -24,12 +25,30 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
   const [tab, setTab] = useState<Tab>('tokens');
   const [locking, setLocking] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [balance, setBalance] = useState('0.00');
 
   const { vault } = popupState;
   const activeAccount = accounts.find(a => a.id === vault.activeAccountId) ?? accounts[0];
   const activeNetwork =
     (vault.activeChainId !== null ? NETWORK_BY_CHAIN_ID.get(vault.activeChainId) : undefined) ??
     networks[0];
+
+  useEffect(() => {
+    let mounted = true;
+    if (activeAccount && activeNetwork) {
+      setBalance('...');
+      fetchBalance(activeAccount.address, activeNetwork)
+        .then(bal => {
+          if (mounted) setBalance(bal);
+        })
+        .catch(() => {
+          if (mounted) setBalance('0.00');
+        });
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [activeAccount, activeNetwork]);
 
   async function handleLock() {
     setLocking(true);
@@ -101,7 +120,7 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
       </header>
 
       {/* ---- Testnet mode banner ---- */}
-      {activeNetwork?.name?.toLowerCase().includes('test') && (
+      {activeNetwork?.isTestnet && (
         <div
           className="mx-4 mb-2 px-3 py-1.5 rounded-lg text-xs font-medium text-center"
           style={{
@@ -115,7 +134,12 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
       )}
 
       {/* ---- Portfolio section ---- */}
-      <PortfolioView account={activeAccount} totalUsd={0} change24h={0} />
+      <PortfolioView 
+        account={activeAccount} 
+        balance={balance} 
+        symbol={activeNetwork.nativeCurrency.symbol} 
+        change24h={0} 
+      />
 
       {/* ---- Tab bar ---- */}
       <div className="flex items-center justify-between px-4 border-b border-void-300">

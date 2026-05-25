@@ -93,7 +93,7 @@ export const BUILTIN_NETWORKS: NetworkConfig[] = [
     name: 'Sepolia',
     shortName: 'SEP',
     family: ChainFamily.EVM,
-    rpcUrls: ['https://rpc.sepolia.org'],
+    rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com'],
     blockExplorerUrl: 'https://sepolia.etherscan.io',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     isTestnet: true,

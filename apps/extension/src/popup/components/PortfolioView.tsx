@@ -2,14 +2,15 @@ import type { Account } from '@celestial/shared-types';
 
 interface Props {
   account: Account | undefined;
-  totalUsd: number;
+  balance: string;
+  symbol: string;
   change24h: number;
 }
 
 const ACTIONS = ['Send', 'Swap', 'Receive', 'Buy'] as const;
 type Action = typeof ACTIONS[number];
 
-export default function PortfolioView({ account, totalUsd, change24h }: Props) {
+export default function PortfolioView({ account, balance, symbol, change24h }: Props) {
   const changePositive = change24h >= 0;
   const changeColor = changePositive ? 'text-success' : 'text-danger';
   const changePrefix = changePositive ? '+' : '';
@@ -19,7 +20,7 @@ export default function PortfolioView({ account, totalUsd, change24h }: Props) {
       {/* Portfolio value */}
       <div className="text-center">
         <p className="text-3xl font-bold text-star tracking-tight leading-none">
-          ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          {balance} <span className="text-xl text-star-dim">{symbol}</span>
         </p>
         {change24h !== 0 && (
           <p className={`text-xs mt-2 font-medium ${changeColor}`}>
