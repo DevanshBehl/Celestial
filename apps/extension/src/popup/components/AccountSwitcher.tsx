@@ -17,6 +17,14 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  
+  const handleCopy = (e: React.MouseEvent, address: string, id: string) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(address);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
   
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -74,14 +82,20 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
         <div className="flex flex-col items-start">
           <span className="text-star text-xs font-semibold leading-none flex items-center gap-1">
             {activeAccount?.name ?? 'Account'}
+            {activeAccount?.chainFamily === 'evm' && (
+              <span className="text-[8px] uppercase tracking-wider bg-blue-500/20 text-blue-400 px-1 py-px rounded border border-blue-500/20 ml-0.5">ETH</span>
+            )}
+            {activeAccount?.chainFamily === 'svm' && (
+              <span className="text-[8px] uppercase tracking-wider bg-purple-500/20 text-purple-400 px-1 py-px rounded border border-purple-500/20 ml-0.5">SOL</span>
+            )}
             <svg
               width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor"
-              strokeWidth="1.5" strokeLinecap="round" className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+              strokeWidth="1.5" strokeLinecap="round" className={`transition-transform duration-200 ml-0.5 ${isOpen ? 'rotate-180' : ''}`}
             >
               <path d="M3 4.5l3 3 3-3" />
             </svg>
           </span>
-          <span className="text-star-dim text-[10px] font-mono mt-0.5 flex items-center gap-1">
+          <span className="text-star-dim text-[10px] font-mono mt-1 flex items-center gap-1">
             {activeAccount?.address 
               ? `${activeAccount.address.slice(0, 6)}…${activeAccount.address.slice(-4)}` 
               : ''}
@@ -145,10 +159,36 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
                       <div className="flex items-center gap-3">
                         {renderAvatar(acc.address)}
                         <div className="flex flex-col items-start">
-                          <span className="text-sm font-medium text-star">{acc.name}</span>
-                          <span className="text-xs text-star-dim font-mono">
-                            {`${acc.address.slice(0, 6)}…${acc.address.slice(-4)}`}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-star">{acc.name}</span>
+                            {acc.chainFamily === 'evm' && (
+                              <span className="text-[9px] uppercase tracking-wider bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/20">Ethereum</span>
+                            )}
+                            {acc.chainFamily === 'svm' && (
+                              <span className="text-[9px] uppercase tracking-wider bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">Solana</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-xs text-star-dim font-mono">
+                              {`${acc.address.slice(0, 6)}…${acc.address.slice(-4)}`}
+                            </span>
+                            <button
+                              onClick={(e) => handleCopy(e, acc.address, acc.id)}
+                              className="text-star-dim hover:text-star transition-colors"
+                              title="Copy Address"
+                            >
+                              {copiedId === acc.id ? (
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                              ) : (
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       </div>
                       {acc.id === activeAccountId && (
