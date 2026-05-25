@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { Account, NetworkConfig, PopupState } from '@celestial/shared-types';
 import { MessageType } from '@celestial/shared-types';
 import { NETWORK_BY_CHAIN_ID } from '../../shared/constants';
@@ -8,6 +8,7 @@ import Logo from '../components/Logo';
 import PortfolioView from '../components/PortfolioView';
 import AssetList from '../components/AssetList';
 import AccountSwitcher from '../components/AccountSwitcher';
+import SettingsView from '../components/SettingsView';
 
 interface Props {
   popupState: PopupState;
@@ -22,6 +23,7 @@ type Tab = 'tokens' | 'collectibles';
 export default function Dashboard({ popupState, accounts, networks, onLock, onRefresh }: Props) {
   const [tab, setTab] = useState<Tab>('tokens');
   const [locking, setLocking] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const { vault } = popupState;
   const activeAccount = accounts.find(a => a.id === vault.activeAccountId) ?? accounts[0];
@@ -83,10 +85,10 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
               <path d="M2 5l6 4 6-4" />
             </svg>
           </IconButton>
-          <IconButton onClick={() => {}} title="Search">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
-              <circle cx="7" cy="7" r="4" />
-              <path d="M10 10l3 3" />
+          <IconButton onClick={() => setShowSettings(true)} title="Settings">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
           </IconButton>
           <IconButton onClick={() => void handleLock()} title="Lock wallet" disabled={locking}>
@@ -161,6 +163,20 @@ export default function Dashboard({ popupState, accounts, networks, onLock, onRe
         <NavItem icon="clock" label="History" />
         <NavItem icon="search" label="Search" />
       </nav>
+
+      {/* ---- Settings Overlay ---- */}
+      <AnimatePresence>
+        {showSettings && (
+          <SettingsView
+            accounts={accounts}
+            networks={networks}
+            activeAccountId={vault.activeAccountId ?? ''}
+            activeChainId={vault.activeChainId}
+            onClose={() => setShowSettings(false)}
+            onRefresh={onRefresh}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -23,6 +23,8 @@ import type {
   VaultCreateResponse,
   VaultUnlockResponse,
   ChangePasswordPayload,
+  ExportMnemonicPayload,
+  ExportMnemonicResponse,
 } from '@celestial/shared-types';
 import {
   AppView,
@@ -342,6 +344,25 @@ export async function handleVaultMessage(
     setSession({ vaultKey: newKey });
 
     return successResponse(requestId, { ok: true });
+  }
+
+  // ---- VAULT_EXPORT_MNEMONIC -----------------------------------------------
+  if (type === MessageType.VAULT_EXPORT_MNEMONIC) {
+    const { password } = payload as ExportMnemonicPayload;
+    const vault = await getVault();
+    if (!vault) {
+      return errorResponse(requestId, CelestialErrorCode.VAULT_NOT_FOUND, 'No vault found');
+    }
+
+    let mnemonic: string;
+    try {
+      mnemonic = await decryptVaultMnemonic(vault, password);
+    } catch {
+      return errorResponse(requestId, CelestialErrorCode.VAULT_WRONG_PASSWORD, 'Wrong password');
+    }
+    
+    const data: ExportMnemonicResponse = { mnemonic };
+    return successResponse(requestId, data);
   }
 
   return errorResponse(requestId, CelestialErrorCode.MESSAGE_UNKNOWN_TYPE, `Unrouted vault message: ${type}`);

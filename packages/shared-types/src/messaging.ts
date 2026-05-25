@@ -25,6 +25,7 @@ export enum MessageType {
   VAULT_LOCK            = 'vault/lock',
   VAULT_CREATE          = 'vault/create',
   VAULT_IMPORT          = 'vault/import',
+  VAULT_EXPORT_MNEMONIC = 'vault/export_mnemonic',
   VAULT_CHANGE_PASSWORD = 'vault/change_password',
   VAULT_STATE_GET       = 'vault/state/get',
   // bg → popup push: background has new vault state (e.g. auto-lock fired)
@@ -142,6 +143,10 @@ export interface ImportVaultPayload {
   mnemonic: string;
   password: string;
   walletName: string;
+}
+
+export interface ExportMnemonicPayload {
+  password: string;
 }
 
 export interface ChangePasswordPayload {
@@ -331,6 +336,10 @@ export interface VaultCreateResponse {
   mnemonic: string;
   state: VaultState;
   accounts: Account[];
+}
+
+export interface ExportMnemonicResponse {
+  mnemonic: string;
 }
 
 export interface ExportKeyResponse {

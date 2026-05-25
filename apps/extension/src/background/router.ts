@@ -11,6 +11,7 @@ const VAULT_TYPES = new Set<MessageType>([
   MessageType.VAULT_CREATE,
   MessageType.VAULT_IMPORT,
   MessageType.VAULT_CHANGE_PASSWORD,
+  MessageType.VAULT_EXPORT_MNEMONIC,
   MessageType.VAULT_STATE_GET,
   MessageType.POPUP_INIT,
 ]);
