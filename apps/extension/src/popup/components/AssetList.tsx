@@ -25,15 +25,18 @@ export default function AssetList({ assets = [], loading = false }: Props) {
 
   if (assets.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-        <div className="w-12 h-12 rounded-full flex items-center justify-center bg-zinc-900 border border-zinc-800">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-moon-50">
-            <circle cx="10" cy="10" r="7" />
-            <path d="M10 6v4l2.5 2.5" />
+      <div className="flex flex-col items-center justify-center py-12 gap-3 text-center">
+        <div 
+          className="w-11 h-11 rounded-xl flex items-center justify-center"
+          style={{ background: 'rgba(39, 39, 42, 0.5)', border: '1px solid rgba(63, 63, 70, 0.4)' }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" className="text-zinc-400">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
           </svg>
         </div>
-        <p className="text-star-muted text-sm font-medium">No tokens yet</p>
-        <p className="text-star-dim text-xs max-w-48 leading-relaxed">
+        <p className="text-zinc-300 text-sm font-medium">No tokens yet</p>
+        <p className="text-zinc-500 text-xs max-w-[200px] leading-relaxed">
           Receive tokens or connect to a dApp to get started.
         </p>
       </div>
@@ -52,23 +55,24 @@ export default function AssetList({ assets = [], loading = false }: Props) {
 function AssetRow({ asset }: { asset: Asset }) {
   return (
     <button
-      className="flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl transition-colors text-left
-                 hover:bg-void-200"
+      className="flex items-center gap-3 w-full px-3 py-3 rounded-xl transition-all duration-150 text-left group"
+      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(39, 39, 42, 0.3)'; }}
+      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
     >
       {/* Token icon */}
       <div className="relative flex-shrink-0">
         <div
-          className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-white"
+          className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold text-white"
           style={{ background: asset.iconColor }}
         >
           {asset.symbol.slice(0, 2)}
         </div>
         {asset.verified && (
           <div
-            className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center"
-            style={{ background: '#ab9ff2' }}
+            className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center"
+            style={{ background: '#6366f1' }}
           >
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="white">
+            <svg width="7" height="7" viewBox="0 0 8 8" fill="white">
               <path d="M1.5 4L3 5.5L6.5 2" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
             </svg>
           </div>
@@ -78,21 +82,20 @@ function AssetRow({ asset }: { asset: Asset }) {
       {/* Token info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <p className="text-star text-sm font-semibold leading-none">{asset.name}</p>
+          <p className="text-zinc-200 text-sm font-medium leading-none">{asset.name}</p>
           {asset.verified && (
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="#ab9ff2" className="flex-shrink-0">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="#6366f1" className="flex-shrink-0">
               <circle cx="6" cy="6" r="6" />
               <path d="M3.5 6L5 7.5L8.5 4" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
             </svg>
           )}
         </div>
-        <p className="text-star-dim text-xs mt-0.5">{asset.balance} {asset.symbol}</p>
+        <p className="text-zinc-500 text-xs mt-0.5">{asset.balance} {asset.symbol}</p>
       </div>
 
       {/* Value */}
       <div className="text-right flex-shrink-0">
-        <p className="text-star-muted text-sm">-</p>
-        <p className="text-star-dim text-xs mt-0.5">-</p>
+        <p className="text-zinc-400 text-sm font-medium">—</p>
       </div>
     </button>
   );
@@ -100,15 +103,14 @@ function AssetRow({ asset }: { asset: Asset }) {
 
 function SkeletonRow() {
   return (
-    <div className="flex items-center gap-3 px-4 py-3.5">
-      <div className="w-10 h-10 rounded-full bg-void-200 animate-pulse" />
+    <div className="flex items-center gap-3 px-3 py-3">
+      <div className="w-9 h-9 rounded-full skeleton-shimmer flex-shrink-0" />
       <div className="flex-1 space-y-2">
-        <div className="h-3.5 w-20 bg-void-200 rounded animate-pulse" />
-        <div className="h-2.5 w-28 bg-void-200 rounded animate-pulse" />
+        <div className="h-3 w-20 rounded skeleton-shimmer" />
+        <div className="h-2.5 w-28 rounded skeleton-shimmer" />
       </div>
       <div className="space-y-2 text-right">
-        <div className="h-3.5 w-10 bg-void-200 rounded animate-pulse" />
-        <div className="h-2.5 w-8 bg-void-200 rounded animate-pulse" />
+        <div className="h-3 w-10 rounded skeleton-shimmer ml-auto" />
       </div>
     </div>
   );

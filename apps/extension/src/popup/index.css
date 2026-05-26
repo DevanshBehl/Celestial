@@ -9,6 +9,7 @@ body,
 #root {
   width: 360px;
   min-height: 600px;
+  max-height: 600px;
   overflow-x: hidden;
 }
 
@@ -33,35 +34,38 @@ body {
 
 @layer components {
   .btn-primary {
-    @apply rounded-xl px-5 py-3.5 font-semibold text-sm transition-all duration-200
-      active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed;
-    background: #ffffff;
-    color: #000000;
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    @apply rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200
+      active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed;
+    background: linear-gradient(180deg, #ffffff 0%, #e4e4e7 100%);
+    color: #09090b;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
-  .btn-primary:hover {
-    background: #f4f4f5;
-    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
+  .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(180deg, #ffffff 0%, #f4f4f5 100%);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transform: translateY(-1px);
   }
 
   .btn-secondary {
-    @apply rounded-xl px-5 py-3.5 font-semibold text-sm text-star-muted transition-all duration-200
-      active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed;
-    background: #18181b; /* zinc-900 */
-    border: 1px solid #27272a; /* zinc-800 */
+    @apply rounded-xl px-5 py-3 font-semibold text-sm text-star-muted transition-all duration-200
+      active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed;
+    background: rgba(24, 24, 27, 0.8);
+    border: 1px solid rgba(63, 63, 70, 0.6);
   }
-  .btn-secondary:hover {
-    background: #27272a;
-    border-color: #3f3f46;
+  .btn-secondary:hover:not(:disabled) {
+    background: rgba(39, 39, 42, 0.9);
+    border-color: rgba(82, 82, 91, 0.8);
     color: #ffffff;
   }
 
   .btn-ghost {
-    @apply rounded-xl px-5 py-3.5 font-semibold text-sm text-star-muted transition-all duration-200
+    @apply rounded-xl px-5 py-3 font-semibold text-sm text-star-muted transition-all duration-200
       active:scale-[0.97];
   }
   .btn-ghost:hover {
-    background: #27272a; /* zinc-800 */
+    background: rgba(39, 39, 42, 0.6);
     color: #ffffff;
   }
 
@@ -100,52 +104,111 @@ body {
   /* ---- Cosmic Glassmorphism ---- */
   
   .glass-panel {
-    background: rgba(24, 24, 27, 0.4);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    background: rgba(15, 15, 18, 0.65);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.4);
   }
 
   .glass-btn {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s ease;
   }
   .glass-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.04);
+  }
+
+  /* ---- Premium Input ---- */
+
+  .input-field {
+    @apply w-full px-4 py-3 text-sm text-star rounded-xl transition-all duration-200;
+    background: rgba(24, 24, 27, 0.6);
+    border: 1px solid rgba(63, 63, 70, 0.5);
+    outline: none;
+  }
+  .input-field:focus {
+    border-color: rgba(161, 161, 170, 0.4);
+    background: rgba(24, 24, 27, 0.8);
+    box-shadow: 0 0 0 3px rgba(161, 161, 170, 0.08);
+  }
+  .input-field::placeholder {
+    color: rgba(113, 113, 122, 0.7);
+  }
+
+  /* ---- Section Label ---- */
+
+  .section-label {
+    @apply text-[11px] font-semibold uppercase tracking-widest;
+    color: rgba(161, 161, 170, 0.7);
+    letter-spacing: 0.12em;
   }
 
   /* ---- Glow and Gradients ---- */
   
   .text-glow {
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   }
   
   .celestial-gradient {
-    background: radial-gradient(circle at top left, #1a153a 0%, #000000 60%);
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(20, 15, 50, 0.6) 0%, #000000 70%);
   }
   
   .neon-blue {
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  }
+
+  /* ---- Shimmer skeleton ---- */
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      110deg,
+      rgba(39, 39, 42, 0.5) 0%,
+      rgba(39, 39, 42, 0.5) 40%,
+      rgba(63, 63, 70, 0.3) 50%,
+      rgba(39, 39, 42, 0.5) 60%,
+      rgba(39, 39, 42, 0.5) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* ---- Danger badge ---- */
+
+  .badge-danger {
+    @apply text-[10px] font-semibold px-2 py-0.5 rounded-md;
+    background: rgba(192, 72, 96, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(192, 72, 96, 0.25);
+  }
+
+  /* ---- Success badge ---- */
+
+  .badge-success {
+    @apply text-[10px] font-semibold px-2 py-0.5 rounded-md;
+    background: rgba(34, 170, 122, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34, 170, 122, 0.25);
   }
 }
 
 /* ---- Scrollbar ---------------------------------------------------------- */
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46;
-  border-radius: 2px;
+  background: rgba(63, 63, 70, 0.5);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: rgba(82, 82, 91, 0.6);
 }

@@ -11,6 +11,16 @@ interface Props {
   onAddAccount: (password: string) => Promise<{ success: boolean; error?: string }>;
 }
 
+/** Generate a deterministic colorful gradient from an address */
+function avatarGradient(address: string) {
+  const s1 = address.charCodeAt(2) ?? 0;
+  const s2 = address.charCodeAt(4) ?? 0;
+  const s3 = address.charCodeAt(6) ?? 0;
+  const hue1 = (s1 * 13 + s2 * 7) % 360;
+  const hue2 = (hue1 + 40 + (s3 % 60)) % 360;
+  return `linear-gradient(135deg, hsl(${hue1}, 55%, 45%) 0%, hsl(${hue2}, 45%, 30%) 100%)`;
+}
+
 export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, onAddAccount }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -58,15 +68,12 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
     }
   }
 
-  function renderAvatar(address: string) {
-    const seed1 = address.charCodeAt(2) ?? 0;
-    const seed2 = address.charCodeAt(4) ?? 0;
+  function renderAvatar(address: string, size: 'sm' | 'md' = 'sm') {
+    const dim = size === 'sm' ? 'w-7 h-7' : 'w-8 h-8';
     return (
       <div
-        className="w-8 h-8 rounded-full flex-shrink-0"
-        style={{
-          background: `linear-gradient(135deg, hsl(0, 0%, ${40 + (seed1 % 30)}%) 0%, hsl(0, 0%, ${10 + (seed2 % 20)}%) 100%)`,
-        }}
+        className={`${dim} rounded-full flex-shrink-0`}
+        style={{ background: avatarGradient(address) }}
       />
     );
   }
@@ -75,29 +82,28 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
     <div className="relative" ref={containerRef}>
       {/* Trigger */}
       <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileTap={{ scale: 0.97 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 px-2 py-1.5 -ml-2 rounded-xl hover:bg-void-200/50 transition-colors"
+        className="flex items-center gap-2 px-1.5 py-1 -ml-1.5 rounded-xl hover:bg-white/5 transition-colors"
       >
         {activeAccount && renderAvatar(activeAccount.address)}
         <div className="flex flex-col items-start">
-          <span className="text-star text-xs font-semibold leading-none flex items-center gap-1">
+          <span className="text-white text-xs font-semibold leading-none flex items-center gap-1">
             {activeAccount?.name ?? 'Account'}
             {activeAccount?.chainFamily === 'evm' && (
-              <span className="text-[8px] uppercase tracking-wider bg-blue-500/20 text-blue-400 px-1 py-px rounded border border-blue-500/20 ml-0.5">ETH</span>
+              <span className="text-[7px] uppercase tracking-wider bg-indigo-500/20 text-indigo-400 px-1 py-px rounded ml-0.5" style={{ border: '1px solid rgba(99, 102, 241, 0.2)' }}>ETH</span>
             )}
             {activeAccount?.chainFamily === 'svm' && (
-              <span className="text-[8px] uppercase tracking-wider bg-purple-500/20 text-purple-400 px-1 py-px rounded border border-purple-500/20 ml-0.5">SOL</span>
+              <span className="text-[7px] uppercase tracking-wider bg-purple-500/20 text-purple-400 px-1 py-px rounded ml-0.5" style={{ border: '1px solid rgba(168, 85, 247, 0.2)' }}>SOL</span>
             )}
             <svg
               width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor"
-              strokeWidth="1.5" strokeLinecap="round" className={`transition-transform duration-200 ml-0.5 ${isOpen ? 'rotate-180' : ''}`}
+              strokeWidth="1.5" strokeLinecap="round" className={`transition-transform duration-200 ml-0.5 text-zinc-400 ${isOpen ? 'rotate-180' : ''}`}
             >
               <path d="M3 4.5l3 3 3-3" />
             </svg>
           </span>
-          <span className="text-star-dim text-[10px] font-mono mt-1 flex items-center gap-1">
+          <span className="text-zinc-500 text-[10px] font-mono mt-0.5">
             {activeAccount?.address 
               ? `${activeAccount.address.slice(0, 6)}…${activeAccount.address.slice(-4)}` 
               : ''}
@@ -109,30 +115,39 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute top-full left-0 mt-2 w-64 glass-panel rounded-xl overflow-hidden z-50 flex flex-col"
-            style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}
+            className="absolute top-full left-0 mt-1.5 w-[260px] rounded-xl overflow-hidden z-50 flex flex-col"
+            style={{ 
+              background: 'rgba(15, 15, 18, 0.95)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(63, 63, 70, 0.3)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.2)',
+            }}
           >
             {isAdding ? (
-              <form onSubmit={handleAddSubmit} className="p-4 flex flex-col gap-3">
-                <span className="text-sm font-semibold text-star">Confirm Password</span>
-                <p className="text-xs text-star-muted">Enter your vault password to derive a new account.</p>
+              <form onSubmit={handleAddSubmit} className="p-3.5 flex flex-col gap-2.5">
+                <span className="text-sm font-semibold text-white">New Account</span>
+                <p className="text-[11px] text-zinc-500 leading-relaxed">Enter your vault password to derive a new account.</p>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="w-full px-3 py-2 text-sm text-star bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-moon-50 transition-colors"
+                  className="input-field text-sm"
                   autoFocus
                 />
-                {error && <span className="text-xs text-danger">{error}</span>}
-                <div className="flex gap-2 mt-1">
+                {error && (
+                  <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg" style={{ background: 'rgba(192, 72, 96, 0.1)' }}>
+                    <span className="text-xs text-red-400">{error}</span>
+                  </div>
+                )}
+                <div className="flex gap-2 mt-0.5">
                   <button
                     type="button"
-                    onClick={() => setIsAdding(false)}
+                    onClick={() => { setIsAdding(false); setError(''); setPassword(''); }}
                     className="flex-1 btn-secondary py-2 text-xs"
                   >
                     Cancel
@@ -142,13 +157,13 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
                     disabled={loading || !password}
                     className="flex-1 btn-primary py-2 text-xs"
                   >
-                    {loading ? 'Creating...' : 'Create'}
+                    {loading ? 'Creating…' : 'Create'}
                   </button>
                 </div>
               </form>
             ) : (
               <>
-                <div className="max-h-60 overflow-y-auto py-2">
+                <div className="max-h-[240px] overflow-y-auto py-1 scrollbar-hide">
                   {accounts.map(acc => (
                     <button
                       key={acc.id}
@@ -156,35 +171,37 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
                         onSwitch(acc.id);
                         setIsOpen(false);
                       }}
-                      className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-void-200 transition-colors"
+                      className="w-full flex items-center justify-between px-3 py-2.5 transition-all duration-150"
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(39, 39, 42, 0.4)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                     >
-                      <div className="flex items-center gap-3">
-                        {renderAvatar(acc.address)}
+                      <div className="flex items-center gap-2.5">
+                        {renderAvatar(acc.address, 'md')}
                         <div className="flex flex-col items-start">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-star">{acc.name}</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-medium text-zinc-200">{acc.name}</span>
                             {acc.chainFamily === 'evm' && (
-                              <span className="text-[9px] uppercase tracking-wider bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/20">Ethereum</span>
+                              <span className="text-[8px] uppercase tracking-wider bg-indigo-500/15 text-indigo-400 px-1 py-px rounded" style={{ border: '1px solid rgba(99, 102, 241, 0.15)' }}>ETH</span>
                             )}
                             {acc.chainFamily === 'svm' && (
-                              <span className="text-[9px] uppercase tracking-wider bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">Solana</span>
+                              <span className="text-[8px] uppercase tracking-wider bg-purple-500/15 text-purple-400 px-1 py-px rounded" style={{ border: '1px solid rgba(168, 85, 247, 0.15)' }}>SOL</span>
                             )}
                           </div>
-                          <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-xs text-star-dim font-mono">
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="text-[11px] text-zinc-500 font-mono">
                               {`${acc.address.slice(0, 6)}…${acc.address.slice(-4)}`}
                             </span>
                             <button
                               onClick={(e) => handleCopy(e, acc.address, acc.id)}
-                              className="text-star-dim hover:text-star transition-colors"
+                              className="text-zinc-500 hover:text-zinc-300 transition-colors p-0.5"
                               title="Copy Address"
                             >
                               {copiedId === acc.id ? (
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                   <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                               ) : (
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                                 </svg>
@@ -194,17 +211,19 @@ export default function AccountSwitcher({ accounts, activeAccountId, onSwitch, o
                         </div>
                       </div>
                       {acc.id === activeAccountId && (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M20 6L9 17l-5-5" />
-                        </svg>
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500 }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                        </motion.div>
                       )}
                     </button>
                   ))}
                 </div>
-                <div className="p-2 border-t border-zinc-800">
+                <div className="p-1.5" style={{ borderTop: '1px solid rgba(63, 63, 70, 0.25)' }}>
                   <button
                     onClick={() => setIsAdding(true)}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl hover:bg-zinc-800 text-moon-light font-medium text-sm transition-colors"
+                    className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-zinc-400 hover:text-zinc-200 font-medium text-sm transition-colors hover:bg-white/5"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                       <path d="M12 5v14M5 12h14" />

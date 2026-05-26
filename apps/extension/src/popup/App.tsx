@@ -161,7 +161,7 @@ export default function App() {
   const activeView = !vault.hasVault ? AppView.ONBOARDING : vault.isLocked ? AppView.UNLOCK : view;
 
   return (
-    <div className="w-[360px] min-h-[600px] bg-void relative overflow-hidden">
+    <div className="w-[360px] h-[600px] bg-void relative overflow-hidden">
       {/* Background ambient glow — subtle moon glow */}
       <div
         className="pointer-events-none absolute inset-0"
@@ -205,7 +205,7 @@ export default function App() {
 
 function LoadingScreen() {
   return (
-    <div className="w-[360px] min-h-[600px] bg-void flex items-center justify-center">
+    <div className="w-[360px] h-[600px] bg-void flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <div className="relative w-12 h-12">
           <div className="absolute inset-0 rounded-full border-2 border-zinc-700" />
@@ -219,7 +219,7 @@ function LoadingScreen() {
 
 function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="w-[360px] min-h-[600px] bg-void flex items-center justify-center p-6">
+    <div className="w-[360px] h-[600px] bg-void flex items-center justify-center p-6">
       <div className="glass p-8 max-w-sm w-full text-center flex flex-col items-center gap-5">
         <div className="text-4xl">⚠️</div>
         <h2 className="text-star font-semibold text-lg">Background unavailable</h2>
